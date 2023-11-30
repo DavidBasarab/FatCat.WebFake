@@ -22,4 +22,8 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\FatCat.WebFake\FatCat.WebFake.csproj" />
+    </ItemGroup>
+
 </Project>
