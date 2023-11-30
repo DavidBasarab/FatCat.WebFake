@@ -1,0 +1,21 @@
+﻿How do I want this to work?
+
+ - Ideally a user will do a post with a request body that looks like this:
+    * HttpMethod
+    * Url
+    * Response
+        * StatusCode
+        * Body (optional)
+        * Headers (optional)
+        * ContentType (optional)
+    * Delay (optional)
+
+- There will be a GET endpoint that will return all the responses that have been added to the server.
+- A GEt endpoint that will give all request that have been made to the server along with the body of the request.
+- A DELETE endpoint that will clear all the responses and requests from the server.
+
+- If a request is made that does not have an entry then NOT FOUND is returned
+
+- Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
+
+- All control requests will be kept in a cache and not stored between restarts.    
