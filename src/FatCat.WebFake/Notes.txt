@@ -21,3 +21,5 @@
 - All control requests will be kept in a cache and not stored between restarts.
 
 - Run either in console or as docker container.    
+
+- Use IConfiguration for the unique identifier that can be passed in
