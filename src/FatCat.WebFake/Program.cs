@@ -4,94 +4,85 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using FatCat.Toolkit.WebServer;
-using Humanizer;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace FatCat.WebFake;
 
 public static class Program
 {
-    public static void Main(params string[] args)
-    {
-        StartWebServer(args);
-    }
+	public static void Main(params string[] args)
+	{
+		var applicationSettings = new ToolkitWebApplicationSettings
+								{
+									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
+									ContainerAssemblies = new List<Assembly>
+															{
+																Assembly.GetExecutingAssembly(),
+																typeof(ToolkitWebApplication).Assembly
+															},
+									OnWebApplicationStarted = Started,
+									Args = args,
+									BasePath = "/david"
+								};
 
-    private static Task OnClientConnected(ToolkitUser user, string connectionId)
-    {
-        ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
+		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
+														{
+															ConsoleLog.WriteMagenta(
+																				$"Got data buffer message: {JsonConvert.SerializeObject(message)}"
+																				);
 
-        return Task.CompletedTask;
-    }
+															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
-    private static Task OnClientDisconnected(ToolkitUser user, string connectionId)
-    {
-        ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
+															await Task.CompletedTask;
 
-        return Task.CompletedTask;
-    }
+															var responseMessage = $"BufferResponse {Faker.RandomString()}";
 
-    private static void Started()
-    {
-        try
-        {
-            ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
 
-            // var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
-            //
-            // testingEndpoint.GetStorageItems().Wait();
-        }
-        catch (Exception e)
-        {
-            ConsoleLog.WriteException(e);
-        }
-    }
+															return responseMessage;
+														};
 
-    private static void StartWebServer(string[] args)
-    {
-        var applicationSettings = new ToolkitWebApplicationSettings
-        {
-            Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
-            ContainerAssemblies = new List<Assembly>
-            {
-                Assembly.GetExecutingAssembly(),
-                typeof(ToolkitWebApplication).Assembly
-            },
-            OnWebApplicationStarted = Started,
-            Args = args,
-            BasePath = "/david"
-        };
+		applicationSettings.ClientMessage += async message =>
+											{
+												await Task.CompletedTask;
 
-        applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
-        {
-            ConsoleLog.WriteMagenta(
-                $"Got data buffer message: {JsonConvert.SerializeObject(message)}"
-            );
-            ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+												ConsoleLog.WriteDarkCyan(
+																		$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
+																		);
 
-            await Task.CompletedTask;
+												return "ACK";
+											};
 
-            var responseMessage = $"BufferResponse {Faker.RandomString()}";
+		applicationSettings.ClientConnected += OnClientConnected;
+		applicationSettings.ClientDisconnected += OnClientDisconnected;
 
-            ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+		ToolkitWebApplication.Run(applicationSettings);
+	}
 
-            return responseMessage;
-        };
+	private static Task OnClientConnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
 
-        applicationSettings.ClientMessage += async message =>
-        {
-            await Task.CompletedTask;
+		return Task.CompletedTask;
+	}
 
-            ConsoleLog.WriteDarkCyan(
-                $"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
-            );
+	private static Task OnClientDisconnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
 
-            return "ACK";
-        };
+		return Task.CompletedTask;
+	}
 
-        applicationSettings.ClientConnected += OnClientConnected;
-        applicationSettings.ClientDisconnected += OnClientDisconnected;
+	private static void Started()
+	{
+		try
+		{
+			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
 
-        ToolkitWebApplication.Run(applicationSettings);
-    }
+			// var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
+			//
+			// testingEndpoint.GetStorageItems().Wait();
+		}
+		catch (Exception e) { ConsoleLog.WriteException(e); }
+	}
 }
