@@ -16,10 +16,12 @@
 
 - If a request is made that does not have an entry then NOT FOUND is returned
 
-- Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
-
 - All control requests will be kept in a cache and not stored between restarts.
 
 - Run either in console or as docker container.    
 
 - Use IConfiguration for the unique identifier that can be passed in
+
+
+Completed
+- Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
