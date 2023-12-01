@@ -22,6 +22,10 @@
         <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
     </PropertyGroup>
 
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true" />
+    </ItemGroup>
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>CS8002,CS1700;IL2121;CS8618;IL2121;CS8603</NoWarn>
