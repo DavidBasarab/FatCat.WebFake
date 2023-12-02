@@ -1,14 +1,4 @@
-﻿How do I want this to work?
-
- - Ideally a user will do a post with a request body that looks like this:
-    * HttpMethod
-    * Url
-    * Response
-        * StatusCode
-        * Body (optional)
-        * Headers (optional)
-        * ContentType (optional)
-    * Delay (optional)
+﻿TODO : 
 
 - There will be a GET endpoint that will return all the responses that have been added to the server.
 - A GEt endpoint that will give all request that have been made to the server along with the body of the request.
@@ -24,4 +14,14 @@
 
 
 Completed
+
 - Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
+- Ideally a user will do a post with a request body that looks like this:
+    * HttpMethod
+    * Url
+    * Response
+        * StatusCode
+        * Body (optional)
+        * Headers (optional)
+        * ContentType (optional)
+    * Delay (optional)
