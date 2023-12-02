@@ -1,4 +1,5 @@
 ﻿using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -15,19 +16,31 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 	{
 		var displayUri = new Uri(Request.GetDisplayUrl());
 
+		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
+
 		if (!displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}"))
 		{
 			return NotImplemented();
 		}
 
+		return await AddResponseEntry(responseCache);
+	}
+
+	private async Task<WebResult> AddResponseEntry(IFatCatCache<ResponseCacheItem> responseCache)
+	{
 		using var reader = new StreamReader(Request.Body);
 
 		var body = await reader.ReadToEndAsync();
 
 		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
 
-		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+		entryRequest.Path = entryRequest.Path.ToLower();
 
-		return NotImplemented();
+		if (!responseCache.InCache(entryRequest.Path))
+		{
+			responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+		}
+
+		return Ok();
 	}
 }
