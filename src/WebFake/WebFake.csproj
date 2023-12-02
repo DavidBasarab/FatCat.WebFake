@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true" />
+        <RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true"/>
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -37,7 +37,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FatCat.Toolkit" Version="1.0.189" />
-        <PackageReference Include="FatCat.Toolkit.WebServer" Version="1.0.18" />
+        <PackageReference Include="CSharpier.MsBuild" Version="0.26.3">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="FatCat.Toolkit" Version="1.0.189"/>
+        <PackageReference Include="FatCat.Toolkit.WebServer" Version="1.0.18"/>
     </ItemGroup>
 </Project>

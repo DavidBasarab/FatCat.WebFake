@@ -4,12 +4,12 @@ namespace FatCat.WebFake;
 
 public interface IWebFakeSettings
 {
-	string UniqueId { get; }
+	string FakeId { get; }
 }
 
 public class WebFakeSettings(IConfiguration configuration) : IWebFakeSettings
 {
-	public string UniqueId
+	public string FakeId
 	{
 		get => configuration["FakeId"];
 	}

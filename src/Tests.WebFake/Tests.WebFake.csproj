@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FatCat.WebFake\FatCat.WebFake.csproj" />
+      <ProjectReference Include="..\WebFake\WebFake.csproj" />
     </ItemGroup>
 
      <ItemGroup>

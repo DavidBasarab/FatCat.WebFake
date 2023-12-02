@@ -13,45 +13,43 @@ public static class Program
 	public static void Main(params string[] args)
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
-								{
-									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
-									ContainerAssemblies = new List<Assembly>
-															{
-																Assembly.GetExecutingAssembly(),
-																typeof(ToolkitWebApplication).Assembly
-															},
-									OnWebApplicationStarted = Started,
-									Args = args,
-									BasePath = "/david"
-								};
+		{
+			Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
+			ContainerAssemblies = new List<Assembly>
+			{
+				Assembly.GetExecutingAssembly(),
+				typeof(ToolkitWebApplication).Assembly
+			},
+			OnWebApplicationStarted = Started,
+			Args = args,
+			BasePath = "/david"
+		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
-														{
-															ConsoleLog.WriteMagenta(
-																				$"Got data buffer message: {JsonConvert.SerializeObject(message)}"
-																				);
+		{
+			ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
 
-															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+			ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
-															await Task.CompletedTask;
+			await Task.CompletedTask;
 
-															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+			var responseMessage = $"BufferResponse {Faker.RandomString()}";
 
-															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+			ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
 
-															return responseMessage;
-														};
+			return responseMessage;
+		};
 
 		applicationSettings.ClientMessage += async message =>
-											{
-												await Task.CompletedTask;
+		{
+			await Task.CompletedTask;
 
-												ConsoleLog.WriteDarkCyan(
-																		$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
-																		);
+			ConsoleLog.WriteDarkCyan(
+				$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
+			);
 
-												return "ACK";
-											};
+			return "ACK";
+		};
 
 		applicationSettings.ClientConnected += OnClientConnected;
 		applicationSettings.ClientDisconnected += OnClientDisconnected;
@@ -83,6 +81,9 @@ public static class Program
 			//
 			// testingEndpoint.GetStorageItems().Wait();
 		}
-		catch (Exception e) { ConsoleLog.WriteException(e); }
+		catch (Exception e)
+		{
+			ConsoleLog.WriteException(e);
+		}
 	}
 }
