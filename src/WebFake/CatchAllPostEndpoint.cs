@@ -1,28 +1,26 @@
 ﻿using FatCat.Toolkit.Caching;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.ServiceModels;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace FatCat.WebFake;
 
-public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache, IWebFakeSettings webFakeSettings)
-	: Endpoint
+public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
+	: CatchAllEndpoint(cache, settings)
 {
 	[HttpPost("{*url}")]
 	public async Task<WebResult> ProcessCatchAll()
 	{
-		if (!IsSetResponseEntry())
+		if (IsResponseEntry())
 		{
-			return NotImplemented();
+			return await AddResponseEntry();
 		}
 
-		return await AddResponseEntry(responseCache);
+		return NotImplemented();
 	}
 
-	private async Task<WebResult> AddResponseEntry(IFatCatCache<ResponseCacheItem> responseCache)
+	private async Task<WebResult> AddResponseEntry()
 	{
 		using var reader = new StreamReader(Request.Body);
 
@@ -32,22 +30,13 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 
 		entryRequest.Path = entryRequest.Path.ToLower();
 
-		if (responseCache.InCache(entryRequest.Path))
+		if (cache.InCache(entryRequest.Path))
 		{
-			return BadRequest("entry-already-exists");
+			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
 
-		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+		cache.Add(new ResponseCacheItem { Entry = entryRequest });
 
-		return Ok("entry-added");
-	}
-
-	private bool IsSetResponseEntry()
-	{
-		var displayUri = new Uri(Request.GetDisplayUrl());
-
-		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
-
-		return displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}/response");
+		return Ok(ResponseCodes.EntryAdded);
 	}
 }
