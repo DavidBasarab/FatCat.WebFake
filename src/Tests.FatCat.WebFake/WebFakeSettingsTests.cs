@@ -23,7 +23,7 @@ public class WebFakeSettingsTests
 	[Fact]
 	public void GetFakeId()
 	{
-		var _ = webSettings.UniqueId;
+		var _ = webSettings.FakeId;
 
 		A.CallTo(() => configuration["FakeId"]).MustHaveHappened();
 	}
@@ -31,6 +31,6 @@ public class WebFakeSettingsTests
 	[Fact]
 	public void ReturnFakeId()
 	{
-		webSettings.UniqueId.Should().Be(FakeId);
+		webSettings.FakeId.Should().Be(FakeId);
 	}
 }
