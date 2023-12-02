@@ -18,7 +18,7 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 
 		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
 
-		if (!displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}"))
+		if (!displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}/response"))
 		{
 			return NotImplemented();
 		}
@@ -36,11 +36,13 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 
 		entryRequest.Path = entryRequest.Path.ToLower();
 
-		if (!responseCache.InCache(entryRequest.Path))
+		if (responseCache.InCache(entryRequest.Path))
 		{
-			responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+			return BadRequest("entry-already-exists");
 		}
 
-		return Ok();
+		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+
+		return Ok("entry-added");
 	}
 }

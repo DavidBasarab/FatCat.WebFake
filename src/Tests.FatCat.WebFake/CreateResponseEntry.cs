@@ -18,8 +18,8 @@ public class CreateResponseEntry
 	private readonly CatchAllPostEndpoint endpoint;
 
 	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(
-																			afterCreate: i => i.Path = Faker.RandomString("UpperPath")
-																			);
+		afterCreate: i => i.Path = Faker.RandomString("UpperPath")
+	);
 
 	private readonly string fakeId = Faker.RandomString();
 	private readonly IFatCatCache<ResponseCacheItem> responseCache = A.Fake<IFatCatCache<ResponseCacheItem>>();
@@ -54,7 +54,10 @@ public class CreateResponseEntry
 	}
 
 	[Fact]
-	public void BeAPost() { endpoint.Should().BePost(nameof(CatchAllPostEndpoint.ProcessCatchAll), "{*url}"); }
+	public void BeAPost()
+	{
+		endpoint.Should().BePost(nameof(CatchAllPostEndpoint.ProcessCatchAll), "{*url}");
+	}
 
 	[Fact]
 	public async Task CheckIfEntryInCache()
@@ -96,6 +99,15 @@ public class CreateResponseEntry
 	}
 
 	[Fact]
+	public void IfEntryAlreadyInCacheReturnBadRequest()
+	{
+		SetUpEntryRequest();
+		inCache = true;
+
+		endpoint.ProcessCatchAll().Should().BeBadRequest("entry-already-exists");
+	}
+
+	[Fact]
 	public void ReturnOkayIfAdded()
 	{
 		SetUpEntryRequest();
@@ -125,5 +137,8 @@ public class CreateResponseEntry
 		endpoint.ControllerContext = controllerContext;
 	}
 
-	private void SetUpEntryRequest() { SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), $"/{fakeId}/response"); }
+	private void SetUpEntryRequest()
+	{
+		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), $"/{fakeId}/response");
+	}
 }
