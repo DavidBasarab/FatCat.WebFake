@@ -14,11 +14,7 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 	[HttpPost("{*url}")]
 	public async Task<WebResult> ProcessCatchAll()
 	{
-		var displayUri = new Uri(Request.GetDisplayUrl());
-
-		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
-
-		if (!displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}/response"))
+		if (!IsSetResponseEntry())
 		{
 			return NotImplemented();
 		}
@@ -44,5 +40,14 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> responseCache,
 		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
 
 		return Ok("entry-added");
+	}
+
+	private bool IsSetResponseEntry()
+	{
+		var displayUri = new Uri(Request.GetDisplayUrl());
+
+		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
+
+		return displayUri.PathAndQuery.StartsWith($"/{webFakeSettings.FakeId}/response");
 	}
 }
