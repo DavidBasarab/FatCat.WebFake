@@ -15,12 +15,22 @@ public class CatchAllEndpointTests<TEndpoint>
 	protected readonly IFatCatCache<ResponseCacheItem> cache = A.Fake<IFatCatCache<ResponseCacheItem>>();
 
 	protected readonly string fakeId = Faker.RandomString();
-	protected readonly IWebFakeSettings webFakeSettings = A.Fake<IWebFakeSettings>();
+	protected readonly IWebFakeSettings settings = A.Fake<IWebFakeSettings>();
 	protected TEndpoint endpoint;
+
+	protected string ResponsePath
+	{
+		get => $"/{fakeId}/response";
+	}
 
 	protected CatchAllEndpointTests()
 	{
-		A.CallTo(() => webFakeSettings.FakeId).ReturnsLazily(() => fakeId);
+		A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId);
+	}
+
+	protected void SetRequestOnEndpoint(string endingPath)
+	{
+		SetRequestOnEndpoint(string.Empty, endingPath);
 	}
 
 	protected void SetRequestOnEndpoint(string request, string endingPath)

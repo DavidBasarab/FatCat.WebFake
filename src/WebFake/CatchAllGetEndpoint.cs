@@ -1,7 +1,5 @@
 ﻿using FatCat.Toolkit.Caching;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.WebServer;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake;
@@ -12,10 +10,12 @@ public class CatchAllGetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFake
 	[HttpGet("{*url}")]
 	public WebResult ProcessGet()
 	{
-		var displayUrl = Request.GetDisplayUrl();
+		if (IsResponseEntry())
+		{
+			var allItems = cache.GetAll();
 
-		ConsoleLog.WriteCyan($"Test Get Endpoint from | <{displayUrl}>");
-		ConsoleLog.WriteMagenta($"Configuration testing | settings.UniqueId := <{settings.FakeId}>");
+			return Ok(allItems.Select(i => i.Entry));
+		}
 
 		return WebResult.Ok($"ACK from Test Get Endpoint | {DateTime.Now:h:mm:ss tt}");
 	}

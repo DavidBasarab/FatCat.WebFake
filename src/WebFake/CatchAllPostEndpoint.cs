@@ -12,12 +12,12 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFak
 	[HttpPost("{*url}")]
 	public async Task<WebResult> ProcessCatchAll()
 	{
-		if (!IsResponseEntry())
+		if (IsResponseEntry())
 		{
-			return NotImplemented();
+			return await AddResponseEntry();
 		}
 
-		return await AddResponseEntry();
+		return NotImplemented();
 	}
 
 	private async Task<WebResult> AddResponseEntry()

@@ -21,7 +21,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new CatchAllPostEndpoint(cache, webFakeSettings);
+		endpoint = new CatchAllPostEndpoint(cache, settings);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}
@@ -63,7 +63,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		await endpoint.ProcessCatchAll();
 
-		A.CallTo(() => webFakeSettings.FakeId).MustHaveHappened();
+		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
 
 	[Fact]
@@ -106,6 +106,6 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 
 	private void SetUpEntryRequest()
 	{
-		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), $"/{fakeId}/response");
+		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), ResponsePath);
 	}
 }
