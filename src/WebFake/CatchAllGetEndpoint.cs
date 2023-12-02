@@ -1,14 +1,16 @@
-﻿using FatCat.Toolkit.Console;
+﻿using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake;
 
-public class CatchAllGetEndpoint(IWebFakeSettings settings) : Endpoint
+public class CatchAllGetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
+	: CatchAllEndpoint(cache, settings)
 {
 	[HttpGet("{*url}")]
-	public WebResult TestGet()
+	public WebResult ProcessGet()
 	{
 		var displayUrl = Request.GetDisplayUrl();
 
