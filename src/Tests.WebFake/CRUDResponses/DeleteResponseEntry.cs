@@ -9,12 +9,11 @@ namespace Tests.FatCat.WebFake.CRUDResponses;
 
 public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 {
-	private readonly string fullEndingPath;
-	private readonly string pathToDelete = $"some/path/{Faker.RandomString()}";
+	private readonly string pathToDelete = $"/some/path/{Faker.RandomString()}";
 
 	public DeleteResponseEntry()
 	{
-		fullEndingPath = $"{ResponsePath}/{pathToDelete}";
+		var fullEndingPath = $"{ResponsePath}{pathToDelete}";
 
 		endpoint = new DeleteEndpoint(cache, settings);
 
@@ -22,17 +21,25 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	}
 
 	[Fact]
-	public void BeADelete() { endpoint.Should().BeDelete(nameof(DeleteEndpoint.ProcessDelete), "{*url}"); }
+	public void BeADelete()
+	{
+		endpoint.Should().BeDelete(nameof(DeleteEndpoint.ProcessDelete), "{*url}");
+	}
 
 	[Fact]
-	public void BeOk() { endpoint.ProcessDelete().Should().BeOk().Be(ResponseCodes.EntryRemoved); }
+	public void BeOk()
+	{
+		endpoint.ProcessDelete().Should().BeOk().Be(ResponseCodes.EntryRemoved);
+	}
 
 	[Fact]
 	public void DeleteTheResponse()
 	{
 		endpoint.ProcessDelete();
 
-		A.CallTo(() => cache.Remove(pathToDelete.ToLower())).MustHaveHappened();
+		var expectedPath = pathToDelete.Remove(0, 1).ToLower();
+
+		A.CallTo(() => cache.Remove(expectedPath)).MustHaveHappened();
 	}
 
 	[Fact]
