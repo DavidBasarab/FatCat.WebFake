@@ -4,13 +4,14 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Extensions;
 using FatCat.WebFake;
+using FatCat.WebFake.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Tests.FatCat.WebFake;
 
-public class CatchAllEndpointTests<TEndpoint>
-	where TEndpoint : CatchAllEndpoint
+public class WebFakeEndpointTests<TEndpoint>
+	where TEndpoint : WebFakeEndpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> cache = A.Fake<IFatCatCache<ResponseCacheItem>>();
 
@@ -23,15 +24,9 @@ public class CatchAllEndpointTests<TEndpoint>
 		get => $"/{fakeId}/response";
 	}
 
-	protected CatchAllEndpointTests()
-	{
-		A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId);
-	}
+	protected WebFakeEndpointTests() { A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId); }
 
-	protected void SetRequestOnEndpoint(string endingPath)
-	{
-		SetRequestOnEndpoint(string.Empty, endingPath);
-	}
+	protected void SetRequestOnEndpoint(string endingPath) { SetRequestOnEndpoint(string.Empty, endingPath); }
 
 	protected void SetRequestOnEndpoint(string request, string endingPath)
 	{

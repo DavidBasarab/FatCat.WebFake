@@ -4,13 +4,13 @@ using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Endpoints;
 
-public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
-	: CatchAllEndpoint(cache, settings)
+public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
+	: WebFakeEndpoint(cache, settings)
 {
 	[HttpPost("{*url}")]
-	public async Task<WebResult> ProcessCatchAll()
+	public async Task<WebResult> ProcessPost()
 	{
 		if (IsResponseEntry())
 		{
@@ -29,6 +29,11 @@ public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFak
 		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
 
 		entryRequest.Path = entryRequest.Path.ToLower();
+
+		if (!entryRequest.Path.StartsWith("/"))
+		{
+			return BadRequest(ResponseCodes.PathMustStartWithSlash);
+		}
 
 		if (cache.InCache(entryRequest.Path))
 		{

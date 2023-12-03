@@ -2,10 +2,10 @@
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Endpoints;
 
-public class CatchAllGetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
-	: CatchAllEndpoint(cache, settings)
+public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
+	: WebFakeEndpoint(cache, settings)
 {
 	[HttpGet("{*url}")]
 	public WebResult ProcessGet()

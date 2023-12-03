@@ -3,16 +3,17 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
+using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.ServiceModels;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Tests.FatCat.WebFake;
+namespace Tests.FatCat.WebFake.CRUDResponses;
 
-public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
+public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 {
 	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(
-		afterCreate: i => i.Path = Faker.RandomString("UpperPath")
+		afterCreate: i => i.Path = Faker.RandomString("/UpperPath")
 	);
 
 	private bool inCache;
@@ -21,7 +22,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new CatchAllPostEndpoint(cache, settings);
+		endpoint = new PostEndpoint(cache, settings);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}
@@ -31,7 +32,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessCatchAll();
+		await endpoint.ProcessPost();
 
 		var requestCopy = entryRequest.DeepCopy();
 
@@ -45,7 +46,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	[Fact]
 	public void BeAPost()
 	{
-		endpoint.Should().BePost(nameof(CatchAllPostEndpoint.ProcessCatchAll), "{*url}");
+		endpoint.Should().BePost(nameof(PostEndpoint.ProcessPost), "{*url}");
 	}
 
 	[Fact]
@@ -53,7 +54,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessCatchAll();
+		await endpoint.ProcessPost();
 
 		A.CallTo(() => cache.InCache(entryRequest.Path.ToLower())).MustHaveHappened();
 	}
@@ -61,7 +62,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	[Fact]
 	public async Task GetWebFakeId()
 	{
-		await endpoint.ProcessCatchAll();
+		await endpoint.ProcessPost();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
@@ -71,7 +72,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), "/response");
 
-		await endpoint.ProcessCatchAll();
+		await endpoint.ProcessPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -82,7 +83,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		await endpoint.ProcessCatchAll();
+		await endpoint.ProcessPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -93,7 +94,17 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		endpoint.ProcessCatchAll().Should().BeBadRequest("entry-already-exists");
+		endpoint.ProcessPost().Should().BeBadRequest("entry-already-exists");
+	}
+
+	[Fact]
+	public void PathMustStartWithForwardSlash()
+	{
+		entryRequest.Path = "path/has/no/forward/slash";
+
+		SetUpEntryRequest();
+
+		endpoint.ProcessPost().Should().BeBadRequest(ResponseCodes.PathMustStartWithSlash);
 	}
 
 	[Fact]
@@ -101,7 +112,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		endpoint.ProcessCatchAll().Should().BeOk();
+		endpoint.ProcessPost().Should().BeOk();
 	}
 
 	private void SetUpEntryRequest()
