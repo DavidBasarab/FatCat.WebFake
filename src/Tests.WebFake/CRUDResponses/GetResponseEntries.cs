@@ -6,9 +6,9 @@ using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.ServiceModels;
 using Xunit;
 
-namespace Tests.FatCat.WebFake;
+namespace Tests.FatCat.WebFake.CRUDResponses;
 
-public class GetResponseEntries : CatchAllEndpointTests<CatchAllGetEndpoint>
+public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 {
 	private readonly List<ResponseCacheItem> cacheItems = Faker.Create<List<ResponseCacheItem>>();
 
@@ -16,16 +16,13 @@ public class GetResponseEntries : CatchAllEndpointTests<CatchAllGetEndpoint>
 	{
 		A.CallTo(() => cache.GetAll()).ReturnsLazily(() => cacheItems);
 
-		endpoint = new CatchAllGetEndpoint(cache, settings);
+		endpoint = new GetEndpoint(cache, settings);
 
 		SetRequestOnEndpoint(string.Empty, ResponsePath);
 	}
 
 	[Fact]
-	public void BeAGet()
-	{
-		endpoint.Should().BeGet(nameof(CatchAllGetEndpoint.ProcessGet), "{*url}");
-	}
+	public void BeAGet() { endpoint.Should().BeGet(nameof(GetEndpoint.ProcessGet), "{*url}"); }
 
 	[Fact]
 	public void DoNotGetFromTheCacheIfNotAResponseEntry()
@@ -46,14 +43,6 @@ public class GetResponseEntries : CatchAllEndpointTests<CatchAllGetEndpoint>
 	}
 
 	[Fact]
-	public void ReadFakeId()
-	{
-		endpoint.ProcessGet();
-
-		A.CallTo(() => settings.FakeId).MustHaveHappened();
-	}
-
-	[Fact]
 	public void IfNoItemsInCacheReturnEmptyArray()
 	{
 		cacheItems.Clear();
@@ -61,6 +50,14 @@ public class GetResponseEntries : CatchAllEndpointTests<CatchAllGetEndpoint>
 		var expectedList = new List<EntryRequest>();
 
 		endpoint.ProcessGet().Should().BeOk().BeEquivalentTo(expectedList);
+	}
+
+	[Fact]
+	public void ReadFakeId()
+	{
+		endpoint.ProcessGet();
+
+		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
 
 	[Fact]

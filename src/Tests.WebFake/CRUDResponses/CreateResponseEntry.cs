@@ -8,13 +8,13 @@ using FatCat.WebFake.ServiceModels;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Tests.FatCat.WebFake;
+namespace Tests.FatCat.WebFake.CRUDResponses;
 
-public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
+public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 {
 	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(
-		afterCreate: i => i.Path = Faker.RandomString("UpperPath")
-	);
+																			afterCreate: i => i.Path = Faker.RandomString("UpperPath")
+																			);
 
 	private bool inCache;
 
@@ -22,7 +22,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new CatchAllPostEndpoint(cache, settings);
+		endpoint = new PostEndpoint(cache, settings);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}
@@ -44,10 +44,7 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 	}
 
 	[Fact]
-	public void BeAPost()
-	{
-		endpoint.Should().BePost(nameof(CatchAllPostEndpoint.ProcessCatchAll), "{*url}");
-	}
+	public void BeAPost() { endpoint.Should().BePost(nameof(PostEndpoint.ProcessCatchAll), "{*url}"); }
 
 	[Fact]
 	public async Task CheckIfEntryInCache()
@@ -105,8 +102,5 @@ public class CreateResponseEntry : CatchAllEndpointTests<CatchAllPostEndpoint>
 		endpoint.ProcessCatchAll().Should().BeOk();
 	}
 
-	private void SetUpEntryRequest()
-	{
-		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), ResponsePath);
-	}
+	private void SetUpEntryRequest() { SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), ResponsePath); }
 }

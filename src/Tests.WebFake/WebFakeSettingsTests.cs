@@ -29,8 +29,5 @@ public class WebFakeSettingsTests
 	}
 
 	[Fact]
-	public void ReturnFakeId()
-	{
-		webSettings.FakeId.Should().Be(FakeId);
-	}
+	public void ReturnFakeId() { webSettings.FakeId.Should().Be(FakeId); }
 }

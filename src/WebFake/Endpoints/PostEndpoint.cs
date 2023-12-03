@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
-	: CatchAllEndpoint(cache, settings)
+public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
+	: WebFakeEndpoint(cache, settings)
 {
 	[HttpPost("{*url}")]
 	public async Task<WebResult> ProcessCatchAll()
