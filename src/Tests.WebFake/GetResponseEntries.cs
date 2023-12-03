@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
+using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.ServiceModels;
 using Xunit;
 

@@ -2,7 +2,7 @@
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Endpoints;
 
 public class CatchAllGetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
 	: CatchAllEndpoint(cache, settings)

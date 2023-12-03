@@ -4,7 +4,7 @@ using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Endpoints;
 
 public class CatchAllPostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
 	: CatchAllEndpoint(cache, settings)

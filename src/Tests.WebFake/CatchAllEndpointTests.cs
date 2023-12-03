@@ -4,6 +4,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Extensions;
 using FatCat.WebFake;
+using FatCat.WebFake.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,7 +3,7 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Endpoints;
 
 public abstract class CatchAllEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings) : Endpoint
 {
