@@ -1,7 +1,7 @@
 ﻿TODO : 
 
-- There will be a GET endpoint that will return all the responses that have been added to the server.
-- A GEt endpoint that will give all request that have been made to the server along with the body of the request.
+
+- A GET endpoint that will give all request that have been made to the server along with the body of the request.
 - A DELETE endpoint that will clear all the responses and requests from the server.
 
 - If a request is made that does not have an entry then NOT FOUND is returned
@@ -12,6 +12,11 @@
 
 - Use IConfiguration for the unique identifier that can be passed in
 
+- HttpVerbs to support
+    * GET
+    * POST
+    * PUT
+    * DELETE
 
 Completed
 
@@ -25,3 +30,4 @@ Completed
         * Headers (optional)
         * ContentType (optional)
     * Delay (optional)
+- There will be a GET endpoint that will return all the responses that have been added to the server.
