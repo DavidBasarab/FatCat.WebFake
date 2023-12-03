@@ -22,7 +22,7 @@ public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetti
 	{
 		var fullPath = GetPath();
 
-		var pathToRemove = fullPath.Replace($"{ResponsePath}/", string.Empty);
+		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty);
 
 		cache.Remove(pathToRemove.ToLower());
 

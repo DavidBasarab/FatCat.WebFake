@@ -10,7 +10,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	: WebFakeEndpoint(cache, settings)
 {
 	[HttpPost("{*url}")]
-	public async Task<WebResult> ProcessCatchAll()
+	public async Task<WebResult> ProcessPost()
 	{
 		if (IsResponseEntry())
 		{
@@ -29,6 +29,11 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
 
 		entryRequest.Path = entryRequest.Path.ToLower();
+
+		if (!entryRequest.Path.StartsWith("/"))
+		{
+			return BadRequest(ResponseCodes.PathMustStartWithSlash);
+		}
 
 		if (cache.InCache(entryRequest.Path))
 		{
