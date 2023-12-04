@@ -24,9 +24,15 @@ public class WebFakeEndpointTests<TEndpoint>
 		get => $"/{fakeId}/response";
 	}
 
-	protected WebFakeEndpointTests() { A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId); }
+	protected WebFakeEndpointTests()
+	{
+		A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId);
+	}
 
-	protected void SetRequestOnEndpoint(string endingPath) { SetRequestOnEndpoint(string.Empty, endingPath); }
+	protected void SetRequestOnEndpoint(string endingPath)
+	{
+		SetRequestOnEndpoint(string.Empty, endingPath);
+	}
 
 	protected void SetRequestOnEndpoint(string request, string endingPath)
 	{
