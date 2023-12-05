@@ -1,9 +1,12 @@
-﻿using FakeItEasy;
+﻿using System.Net;
+using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.ServiceModels;
+using FluentAssertions;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.VerbTests;
@@ -12,16 +15,35 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 {
 	//https://stackoverflow.com/a/46185124/2469
 	private const string GetPath = "/Some/Path/That/I/Am/Getting";
-	private EntryRequest entryRequest = Faker.Create<EntryRequest>();
+	private readonly EntryResponse response = Faker.Create<EntryResponse>();
+	private EntryRequest entryRequest;
 
 	public GetTests()
 	{
 		endpoint = new GetEndpoint(cache, settings);
 
+		entryRequest = Faker.Create<EntryRequest>(afterCreate: i => i.Response = response);
+
 		SetRequestOnEndpoint(GetPath);
 
 		A.CallTo(() => cache.Get(A<string>._))
 			.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
+	}
+
+	[Fact]
+	public async Task BasicReturnStatusCodeAndResponseFromCacheItem()
+	{
+		var model = Faker.Create<TestModel>();
+
+		response.ContentType = "application/json; charset=UTF-8";
+		response.Body = JsonConvert.SerializeObject(model);
+		response.HttpStatusCode = HttpStatusCode.OK;
+
+		var result = await endpoint.DoGet();
+
+		result.ContentType.Should().Be("application/json; charset=UTF-8");
+		result.Content.Should().Be(response.Body);
+		result.StatusCode.Should().Be(HttpStatusCode.OK);
 	}
 
 	[Fact]

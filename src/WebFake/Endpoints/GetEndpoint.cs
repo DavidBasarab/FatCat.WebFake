@@ -23,6 +23,13 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 
 		var cacheItem = cache.Get(path);
 
+		if (cacheItem?.Entry?.Response != null)
+		{
+			var response = cacheItem.Entry.Response;
+
+			return new WebResult(response.HttpStatusCode, response.Body);
+		}
+
 		return WebResult.NotFound();
 	}
 }
