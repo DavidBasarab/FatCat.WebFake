@@ -32,7 +32,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		var requestCopy = entryRequest.DeepCopy();
 
@@ -46,7 +46,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	[Fact]
 	public void BeAPost()
 	{
-		endpoint.Should().BePost(nameof(PostEndpoint.ProcessPost), "{*url}");
+		endpoint.Should().BePost(nameof(PostEndpoint.DoPost), "{*url}");
 	}
 
 	[Fact]
@@ -54,7 +54,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => cache.InCache(entryRequest.Path.ToLower())).MustHaveHappened();
 	}
@@ -62,7 +62,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	[Fact]
 	public async Task GetWebFakeId()
 	{
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
@@ -72,7 +72,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), "/response");
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -83,7 +83,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -94,7 +94,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		endpoint.ProcessPost().Should().BeBadRequest("entry-already-exists");
+		endpoint.DoPost().Should().BeBadRequest("entry-already-exists");
 	}
 
 	[Fact]
@@ -104,7 +104,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 
 		SetUpEntryRequest();
 
-		endpoint.ProcessPost().Should().BeBadRequest(ResponseCodes.PathMustStartWithSlash);
+		endpoint.DoPost().Should().BeBadRequest(ResponseCodes.PathMustStartWithSlash);
 	}
 
 	[Fact]
@@ -112,7 +112,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		endpoint.ProcessPost().Should().BeOk();
+		endpoint.DoPost().Should().BeOk();
 	}
 
 	private void SetUpEntryRequest()

@@ -11,14 +11,14 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	: WebFakeEndpoint(cache, settings, thread)
 {
 	[HttpPost("{*url}")]
-	public async Task<WebResult> ProcessPost()
+	public async Task<WebResult> DoPost()
 	{
 		if (IsResponseEntry())
 		{
 			return await AddResponseEntry();
 		}
 
-		return NotImplemented();
+		return await ProcessRequest();
 	}
 
 	private async Task<WebResult> AddResponseEntry()
