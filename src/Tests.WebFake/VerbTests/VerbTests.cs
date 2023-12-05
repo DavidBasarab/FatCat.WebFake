@@ -20,6 +20,8 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	private readonly EntryResponse response = Faker.Create<EntryResponse>();
 	private EntryRequest entryRequest;
 
+	protected abstract string HttpMethod { get; }
+
 	protected VerbTests()
 	{
 		// ReSharper disable once VirtualMemberCallInConstructor
@@ -109,9 +111,15 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	{
 		entryRequest = null;
 
-		var result = await ExecuteEndpointAction();
+		await TestEndpointReturnsNotFound();
+	}
 
-		result.Should().BeNotFound();
+	[Fact]
+	public async Task IfRequestDoesMatchHttpVerbThenReturnNotFound()
+	{
+		entryRequest.HttpMethod = $"Different{HttpMethod}";
+
+		await TestEndpointReturnsNotFound();
 	}
 
 	[Fact]
@@ -131,17 +139,26 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	private void SetUpCache()
 	{
 		A.CallTo(() => cache.Get(A<string>._))
-			.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
+		.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
 	}
 
 	private void SetUpResponse()
 	{
 		var model = Faker.Create<TestModel>();
 
+		entryRequest.HttpMethod = HttpMethod;
+
 		response.Headers.Clear();
 		response.ContentType = "application/json; charset=UTF-8";
 		response.Body = JsonConvert.SerializeObject(model);
 		response.HttpStatusCode = HttpStatusCode.OK;
+	}
+
+	private async Task TestEndpointReturnsNotFound()
+	{
+		var result = await ExecuteEndpointAction();
+
+		result.Should().BeNotFound();
 	}
 
 	private void VerifyHeader(string name, string value)

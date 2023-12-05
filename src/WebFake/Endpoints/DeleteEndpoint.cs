@@ -8,6 +8,11 @@ namespace FatCat.WebFake.Endpoints;
 public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
 	: WebFakeEndpoint(cache, settings, thread)
 {
+	protected override string SupportedVerb
+	{
+		get => "DELETE";
+	}
+
 	[HttpDelete("{*url}")]
 	public WebResult ProcessDelete()
 	{

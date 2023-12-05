@@ -5,6 +5,11 @@ namespace Tests.FatCat.WebFake.VerbTests;
 
 public class PostTests : VerbTests<PostEndpoint>
 {
+	protected override string HttpMethod
+	{
+		get => "POST";
+	}
+
 	protected override PostEndpoint CreateEndpoint()
 	{
 		return new PostEndpoint(cache, settings, thread);

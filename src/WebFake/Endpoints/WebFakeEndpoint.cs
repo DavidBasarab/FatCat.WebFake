@@ -1,5 +1,4 @@
 ﻿using FatCat.Toolkit.Caching;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -14,12 +13,13 @@ public abstract class WebFakeEndpoint(
 ) : Endpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> cache = cache;
-	protected readonly IThread thread = thread;
 
 	protected string ResponsePath
 	{
 		get => $"/{settings.FakeId}/response";
 	}
+
+	protected abstract string SupportedVerb { get; }
 
 	protected string GetPath()
 	{
@@ -41,7 +41,12 @@ public abstract class WebFakeEndpoint(
 
 		var cacheItem = cache.Get(path);
 
-		if (cacheItem?.Entry?.Response == null)
+		if (cacheItem is null)
+		{
+			return WebResult.NotFound();
+		}
+
+		if (cacheItem.Entry?.Response == null || cacheItem.Entry.HttpMethod != SupportedVerb)
 		{
 			return WebResult.NotFound();
 		}

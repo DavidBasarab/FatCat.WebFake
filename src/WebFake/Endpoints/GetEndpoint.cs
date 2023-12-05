@@ -22,4 +22,9 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 
 		return await ProcessRequest();
 	}
+
+	protected override string SupportedVerb
+	{
+		get => "GET";
+	}
 }
