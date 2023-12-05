@@ -10,9 +10,9 @@ namespace FatCat.WebFake.Endpoints;
 public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
 	: WebFakeEndpoint(cache, settings, thread)
 {
-	protected override string SupportedVerb
+	protected override HttpVerb SupportedVerb
 	{
-		get => "POST";
+		get => HttpVerb.Post;
 	}
 
 	[HttpPost("{*url}")]

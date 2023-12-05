@@ -4,7 +4,7 @@ namespace FatCat.WebFake.ServiceModels;
 
 public class EntryRequest : EqualObject
 {
-	public string HttpMethod { get; set; }
+	public HttpVerb Verb { get; set; }
 
 	public string Path { get; set; }
 

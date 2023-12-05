@@ -1,6 +1,7 @@
 ﻿using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
+using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
 
@@ -19,7 +20,7 @@ public abstract class WebFakeEndpoint(
 		get => $"/{settings.FakeId}/response";
 	}
 
-	protected abstract string SupportedVerb { get; }
+	protected abstract HttpVerb SupportedVerb { get; }
 
 	protected string GetPath()
 	{
@@ -46,7 +47,7 @@ public abstract class WebFakeEndpoint(
 			return WebResult.NotFound();
 		}
 
-		if (cacheItem.Entry?.Response == null || cacheItem.Entry.HttpMethod != SupportedVerb)
+		if (cacheItem.Entry?.Response == null || cacheItem.Entry.Verb != SupportedVerb)
 		{
 			return WebResult.NotFound();
 		}
