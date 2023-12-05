@@ -8,9 +8,8 @@ namespace FatCat.WebFake.Endpoints;
 public abstract class WebFakeEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings) : Endpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> cache = cache;
-	protected readonly IWebFakeSettings settings = settings;
 
-	public string ResponsePath
+	protected string ResponsePath
 	{
 		get => $"/{settings.FakeId}/response";
 	}
@@ -21,7 +20,7 @@ public abstract class WebFakeEndpoint(IFatCatCache<ResponseCacheItem> cache, IWe
 
 		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
 
-		return displayUri.PathAndQuery;
+		return displayUri.PathAndQuery.ToLower();
 	}
 
 	protected bool IsResponseEntry()

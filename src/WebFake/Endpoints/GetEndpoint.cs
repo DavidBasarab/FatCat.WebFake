@@ -8,8 +8,10 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 	: WebFakeEndpoint(cache, settings)
 {
 	[HttpGet("{*url}")]
-	public WebResult ProcessGet()
+	public async Task<WebResult> DoGet()
 	{
+		await Task.CompletedTask;
+
 		if (IsResponseEntry())
 		{
 			var allItems = cache.GetAll();
@@ -17,6 +19,10 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 			return Ok(allItems.Select(i => i.Entry));
 		}
 
-		return WebResult.Ok($"ACK from Test Get Endpoint | {DateTime.Now:h:mm:ss tt}");
+		var path = GetPath();
+
+		var cacheItem = cache.Get(path);
+
+		return WebResult.NotFound();
 	}
 }
