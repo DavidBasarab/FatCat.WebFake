@@ -24,8 +24,6 @@ public abstract class WebFakeEndpoint(
 	{
 		var displayUri = new Uri(Request.GetDisplayUrl());
 
-		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
-
 		return displayUri.PathAndQuery.ToLower();
 	}
 
