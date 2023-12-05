@@ -40,6 +40,30 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 	}
 
 	[Fact]
+	public async Task CanChangeContentType()
+	{
+		response.ContentType = "text/plain";
+
+		var result = await endpoint.DoGet();
+
+		result.ContentType.Should().Be("text/plain");
+		result.Content.Should().Be(response.Body);
+		result.StatusCode.Should().Be(HttpStatusCode.OK);
+	}
+
+	[Fact]
+	public async Task CanChangeStatusCode()
+	{
+		response.HttpStatusCode = HttpStatusCode.NotModified;
+
+		var result = await endpoint.DoGet();
+
+		result.ContentType.Should().Be("application/json; charset=UTF-8");
+		result.Content.Should().Be(response.Body);
+		result.StatusCode.Should().Be(HttpStatusCode.NotModified);
+	}
+
+	[Fact]
 	public async Task GetEntryRequestFromCache()
 	{
 		await endpoint.DoGet();
