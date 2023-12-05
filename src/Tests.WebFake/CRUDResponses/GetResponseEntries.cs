@@ -16,7 +16,7 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	{
 		A.CallTo(() => cache.GetAll()).ReturnsLazily(() => cacheItems);
 
-		endpoint = new GetEndpoint(cache, settings);
+		endpoint = new GetEndpoint(cache, settings, thread);
 
 		SetRequestOnEndpoint(string.Empty, ResponsePath);
 	}

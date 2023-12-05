@@ -3,6 +3,7 @@ using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Extensions;
+using FatCat.Toolkit.Threading;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,7 @@ public class WebFakeEndpointTests<TEndpoint>
 	where TEndpoint : WebFakeEndpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> cache = A.Fake<IFatCatCache<ResponseCacheItem>>();
-
+	protected readonly IThread thread = A.Fake<IThread>();
 	protected readonly string fakeId = Faker.RandomString();
 	protected readonly IWebFakeSettings settings = A.Fake<IWebFakeSettings>();
 	protected TEndpoint endpoint;

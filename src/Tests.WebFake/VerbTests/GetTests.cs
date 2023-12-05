@@ -6,6 +6,7 @@ using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.ServiceModels;
 using FluentAssertions;
+using Humanizer;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -20,13 +21,25 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 
 	public GetTests()
 	{
-		endpoint = new GetEndpoint(cache, settings);
+		endpoint = new GetEndpoint(cache, settings, thread);
 
 		entryRequest = Faker.Create<EntryRequest>(afterCreate: i => i.Response = response);
 
 		SetUpResponse();
 		SetRequestOnEndpoint(GetPath);
 		SetUpCache();
+	}
+
+	[Fact]
+	public async Task AddHeadersIfPopulated()
+	{
+		response.Headers.Add("x-fake1", "fake1");
+		response.Headers.Add("x-fake34", "fake34");
+
+		await endpoint.DoGet();
+
+		VerifyHeader("x-fake1", "fake1");
+		VerifyHeader("x-fake34", "fake34");
 	}
 
 	[Fact]
@@ -64,6 +77,24 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 	}
 
 	[Fact]
+	public async Task DoNotAddHeaders()
+	{
+		await endpoint.DoGet();
+
+		endpoint.Response.Headers.Should().BeEmpty();
+	}
+
+	[Fact]
+	public async Task DoNotWaitIfNoDelay()
+	{
+		response.Delay = null;
+
+		await endpoint.DoGet();
+
+		A.CallTo(() => thread.Sleep(A<TimeSpan>._)).MustNotHaveHappened();
+	}
+
+	[Fact]
 	public async Task GetEntryRequestFromCache()
 	{
 		await endpoint.DoGet();
@@ -79,6 +110,16 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 		endpoint.DoGet().Should().BeNotFound();
 	}
 
+	[Fact]
+	public async Task WaitIfDelayIsSet()
+	{
+		response.Delay = 3.Seconds();
+
+		await endpoint.DoGet();
+
+		A.CallTo(() => thread.Sleep(3.Seconds())).MustHaveHappened();
+	}
+
 	private void SetUpCache()
 	{
 		A.CallTo(() => cache.Get(A<string>._))
@@ -89,8 +130,18 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 	{
 		var model = Faker.Create<TestModel>();
 
+		response.Headers.Clear();
 		response.ContentType = "application/json; charset=UTF-8";
 		response.Body = JsonConvert.SerializeObject(model);
 		response.HttpStatusCode = HttpStatusCode.OK;
+	}
+
+	private void VerifyHeader(string name, string value)
+	{
+		var foundValue = endpoint.Response.Headers.TryGetValue(name, out var item);
+
+		foundValue.Should().BeTrue();
+
+		item[0].Should().Be(value);
 	}
 }
