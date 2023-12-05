@@ -24,21 +24,14 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 
 		entryRequest = Faker.Create<EntryRequest>(afterCreate: i => i.Response = response);
 
+		SetUpResponse();
 		SetRequestOnEndpoint(GetPath);
-
-		A.CallTo(() => cache.Get(A<string>._))
-			.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
+		SetUpCache();
 	}
 
 	[Fact]
 	public async Task BasicReturnStatusCodeAndResponseFromCacheItem()
 	{
-		var model = Faker.Create<TestModel>();
-
-		response.ContentType = "application/json; charset=UTF-8";
-		response.Body = JsonConvert.SerializeObject(model);
-		response.HttpStatusCode = HttpStatusCode.OK;
-
 		var result = await endpoint.DoGet();
 
 		result.ContentType.Should().Be("application/json; charset=UTF-8");
@@ -60,5 +53,20 @@ public class GetTests : WebFakeEndpointTests<GetEndpoint>
 		entryRequest = null;
 
 		endpoint.DoGet().Should().BeNotFound();
+	}
+
+	private void SetUpCache()
+	{
+		A.CallTo(() => cache.Get(A<string>._))
+		.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
+	}
+
+	private void SetUpResponse()
+	{
+		var model = Faker.Create<TestModel>();
+
+		response.ContentType = "application/json; charset=UTF-8";
+		response.Body = JsonConvert.SerializeObject(model);
+		response.HttpStatusCode = HttpStatusCode.OK;
 	}
 }
