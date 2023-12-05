@@ -15,7 +15,7 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	{
 		var fullEndingPath = $"{ResponsePath}{pathToDelete}";
 
-		endpoint = new DeleteEndpoint(cache, settings);
+		endpoint = new DeleteEndpoint(cache, settings, thread);
 
 		SetRequestOnEndpoint(fullEndingPath);
 	}

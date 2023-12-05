@@ -11,7 +11,7 @@ public class EntryResponse : EqualObject
 
 	public TimeSpan? Delay { get; set; }
 
-	public Dictionary<string, string> Headers { get; set; }
+	public Dictionary<string, string> Headers { get; set; } = new();
 
 	public HttpStatusCode HttpStatusCode { get; set; }
 }

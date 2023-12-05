@@ -1,4 +1,5 @@
 ﻿using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +7,8 @@ using Newtonsoft.Json;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings)
-	: WebFakeEndpoint(cache, settings)
+public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
+	: WebFakeEndpoint(cache, settings, thread)
 {
 	[HttpPost("{*url}")]
 	public async Task<WebResult> ProcessPost()

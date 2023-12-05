@@ -1,16 +1,21 @@
 ﻿using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace FatCat.WebFake.Endpoints;
 
-public abstract class WebFakeEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings) : Endpoint
+public abstract class WebFakeEndpoint(
+	IFatCatCache<ResponseCacheItem> cache,
+	IWebFakeSettings settings,
+	IThread thread
+) : Endpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> cache = cache;
-	protected readonly IWebFakeSettings settings = settings;
+	protected readonly IThread thread = thread;
 
-	public string ResponsePath
+	protected string ResponsePath
 	{
 		get => $"/{settings.FakeId}/response";
 	}
@@ -19,9 +24,7 @@ public abstract class WebFakeEndpoint(IFatCatCache<ResponseCacheItem> cache, IWe
 	{
 		var displayUri = new Uri(Request.GetDisplayUrl());
 
-		ConsoleLog.WriteMagenta($"DisplayUri: {displayUri}");
-
-		return displayUri.PathAndQuery;
+		return displayUri.PathAndQuery.ToLower();
 	}
 
 	protected bool IsResponseEntry()
