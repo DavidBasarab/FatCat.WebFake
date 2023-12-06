@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using System.Diagnostics;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.ServiceModels;
@@ -15,8 +16,6 @@ public class PutEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 
 	public override async Task<WebResult> DoAction()
 	{
-		await Task.CompletedTask;
-
-		return NotImplemented();
+		return await ProcessRequest();
 	}
 }
