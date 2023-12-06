@@ -1,6 +1,5 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Models;
@@ -21,7 +20,8 @@ public class GetEndpoint(
 	{
 		get => HttpVerb.Get;
 	}
-	protected string ClientRequestPath
+
+	private string ClientRequestPath
 	{
 		get => $"/{settings.FakeId}/request";
 	}
@@ -39,6 +39,8 @@ public class GetEndpoint(
 		if (IsGetClientRequest())
 		{
 			var requestItems = clientRequestCache.GetAll();
+
+			return Ok(requestItems.Select(i => i.Request));
 		}
 
 		return await ProcessRequest();

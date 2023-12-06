@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
+using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.Models;
 using Xunit;
@@ -30,5 +31,11 @@ public class GetAllClientRequests : WebFakeEndpointTests<GetEndpoint>
 		await endpoint.DoAction();
 
 		A.CallTo(() => clientRequestCache.GetAll()).MustHaveHappened();
+	}
+
+	[Fact]
+	public void ReturnAllClientItems()
+	{
+		endpoint.DoAction().Should().BeOk().BeEquivalentTo(cacheItems.Select(i => i.Request));
 	}
 }
