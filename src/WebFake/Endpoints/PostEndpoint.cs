@@ -41,7 +41,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 			return BadRequest(ResponseCodes.PathMustStartWithSlash);
 		}
 
-		if (cache.InCache(entryRequest.Path))
+		if (IsInCache(entryRequest))
 		{
 			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
@@ -49,5 +49,12 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 		cache.Add(new ResponseCacheItem { Entry = entryRequest });
 
 		return Ok(ResponseCodes.EntryAdded);
+	}
+
+	private bool IsInCache(EntryRequest entryRequest)
+	{
+		var cacheId = $"{entryRequest.Verb}-{entryRequest.Path}";
+
+		return cache.InCache(cacheId);
 	}
 }

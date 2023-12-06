@@ -12,9 +12,11 @@ namespace Tests.FatCat.WebFake.CRUDResponses;
 
 public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 {
-	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(
-		afterCreate: i => i.Path = Faker.RandomString("/UpperPath")
-	);
+	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(i =>
+	{
+		i.Path = Faker.RandomString("/UpperPath");
+		i.Verb = HttpVerb.Get;
+	});
 
 	private bool inCache;
 
@@ -50,13 +52,31 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	}
 
 	[Fact]
+	public async Task CanCreateAnEntryWithSamePathButDifferentVerbs()
+	{
+		entryRequest.Verb = HttpVerb.Post;
+
+		SetUpEntryRequest();
+
+		await endpoint.DoPost();
+
+		var requestCopy = entryRequest.DeepCopy();
+
+		requestCopy.Path = requestCopy.Path.ToLower();
+
+		var expectedCacheItem = new ResponseCacheItem { Entry = requestCopy };
+
+		A.CallTo(() => cache.Add(expectedCacheItem, default)).MustHaveHappened();
+	}
+
+	[Fact]
 	public async Task CheckIfEntryInCache()
 	{
 		SetUpEntryRequest();
 
 		await endpoint.DoPost();
 
-		A.CallTo(() => cache.InCache(entryRequest.Path.ToLower())).MustHaveHappened();
+		A.CallTo(() => cache.InCache($"{entryRequest.Verb}-{entryRequest.Path.ToLower()}")).MustHaveHappened();
 	}
 
 	[Fact]

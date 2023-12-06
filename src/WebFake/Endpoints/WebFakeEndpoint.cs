@@ -40,7 +40,9 @@ public abstract class WebFakeEndpoint(
 	{
 		var path = GetPath();
 
-		var cacheItem = cache.Get(path);
+		var cacheId = $"{SupportedVerb}-{path}";
+
+		var cacheItem = cache.Get(cacheId);
 
 		if (cacheItem is null)
 		{
