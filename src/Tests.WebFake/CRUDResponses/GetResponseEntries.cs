@@ -24,7 +24,7 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	[Fact]
 	public void BeAGet()
 	{
-		endpoint.Should().BeGet(nameof(GetEndpoint.DoGet), "{*url}");
+		endpoint.Should().BeGet(nameof(GetEndpoint.DoAction), "{*url}");
 	}
 
 	[Fact]
@@ -32,7 +32,7 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	{
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 
-		await endpoint.DoGet();
+		await endpoint.DoAction();
 
 		A.CallTo(() => cache.GetAll()).MustNotHaveHappened();
 	}
@@ -40,7 +40,7 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	[Fact]
 	public async Task GetAllItemsFromCache()
 	{
-		await endpoint.DoGet();
+		await endpoint.DoAction();
 
 		A.CallTo(() => cache.GetAll()).MustHaveHappened();
 	}
@@ -52,13 +52,13 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 
 		var expectedList = new List<EntryRequest>();
 
-		endpoint.DoGet().Should().BeOk().BeEquivalentTo(expectedList);
+		endpoint.DoAction().Should().BeOk().BeEquivalentTo(expectedList);
 	}
 
 	[Fact]
 	public async Task ReadFakeId()
 	{
-		await endpoint.DoGet();
+		await endpoint.DoAction();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
@@ -68,6 +68,6 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	{
 		var expectedList = cacheItems.Select(i => i.Entry).ToList();
 
-		endpoint.DoGet().Should().BeOk().BeEquivalentTo(expectedList);
+		endpoint.DoAction().Should().BeOk().BeEquivalentTo(expectedList);
 	}
 }

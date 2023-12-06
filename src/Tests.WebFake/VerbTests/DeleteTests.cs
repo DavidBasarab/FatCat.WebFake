@@ -4,16 +4,16 @@ using FatCat.WebFake.ServiceModels;
 
 namespace Tests.FatCat.WebFake.VerbTests;
 
-public class PostTests : VerbTests<PostEndpoint>
+public class DeleteTests : VerbTests<DeleteEndpoint>
 {
 	protected override HttpVerb Verb
 	{
-		get => HttpVerb.Post;
+		get => HttpVerb.Delete;
 	}
 
-	protected override PostEndpoint CreateEndpoint()
+	protected override DeleteEndpoint CreateEndpoint()
 	{
-		return new PostEndpoint(cache, settings, thread);
+		return new DeleteEndpoint(cache, settings, thread);
 	}
 
 	protected override async Task<WebResult> ExecuteEndpointAction()

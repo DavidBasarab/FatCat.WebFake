@@ -23,19 +23,19 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	[Fact]
 	public void BeADelete()
 	{
-		endpoint.Should().BeDelete(nameof(DeleteEndpoint.ProcessDelete), "{*url}");
+		endpoint.Should().BeDelete(nameof(DeleteEndpoint.DoAction), "{*url}");
 	}
 
 	[Fact]
 	public void BeOk()
 	{
-		endpoint.ProcessDelete().Should().BeOk().Be(ResponseCodes.EntryRemoved);
+		endpoint.DoAction().Should().BeOk().Be(ResponseCodes.EntryRemoved);
 	}
 
 	[Fact]
 	public void DeleteTheResponse()
 	{
-		endpoint.ProcessDelete();
+		endpoint.DoAction();
 
 		A.CallTo(() => cache.Remove(pathToDelete)).MustHaveHappened();
 	}
@@ -43,7 +43,7 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	[Fact]
 	public void GetFakeIdFromSettings()
 	{
-		endpoint.ProcessDelete();
+		endpoint.DoAction();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
@@ -53,7 +53,7 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	{
 		SetRequestOnEndpoint(pathToDelete);
 
-		endpoint.ProcessDelete();
+		endpoint.DoAction();
 
 		A.CallTo(() => cache.Remove(A<string>._)).MustNotHaveHappened();
 	}

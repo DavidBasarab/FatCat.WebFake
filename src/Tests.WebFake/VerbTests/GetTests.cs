@@ -18,6 +18,6 @@ public class GetTests : VerbTests<GetEndpoint>
 
 	protected override async Task<WebResult> ExecuteEndpointAction()
 	{
-		return await endpoint.DoGet();
+		return await endpoint.DoAction();
 	}
 }

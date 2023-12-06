@@ -15,14 +15,14 @@ public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetti
 	}
 
 	[HttpDelete("{*url}")]
-	public WebResult ProcessDelete()
+	public override async Task<WebResult> DoAction()
 	{
 		if (IsResponseEntry())
 		{
 			return RemoveResponseEntry();
 		}
 
-		return NotImplemented();
+		return await ProcessRequest();
 	}
 
 	private WebResult RemoveResponseEntry()

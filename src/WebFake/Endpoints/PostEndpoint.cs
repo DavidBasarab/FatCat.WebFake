@@ -16,7 +16,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	}
 
 	[HttpPost("{*url}")]
-	public async Task<WebResult> DoPost()
+	public override async Task<WebResult> DoAction()
 	{
 		if (IsResponseEntry())
 		{
