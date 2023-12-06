@@ -1,13 +1,20 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
-	: WebFakeEndpoint(cache, settings, thread)
+public class DeleteEndpoint(
+	IFatCatCache<ResponseCacheItem> responseCache,
+	IWebFakeSettings settings,
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> requestCache,
+	IGenerator generator,
+	IDateTimeUtilities dateTimeUtilities
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator, dateTimeUtilities)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -31,7 +38,7 @@ public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetti
 
 		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty);
 
-		cache.Remove(pathToRemove.ToLower());
+		responseCache.Remove(pathToRemove.ToLower());
 
 		return Ok(ResponseCodes.EntryRemoved);
 	}

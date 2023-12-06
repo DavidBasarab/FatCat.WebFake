@@ -1,4 +1,4 @@
-﻿namespace FatCat.WebFake.ServiceModels;
+﻿namespace FatCat.WebFake.Models;
 
 public enum HttpVerb
 {

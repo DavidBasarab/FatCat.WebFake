@@ -3,7 +3,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.CRUDResponses;
@@ -16,7 +16,7 @@ public class GetResponseEntries : WebFakeEndpointTests<GetEndpoint>
 	{
 		A.CallTo(() => cache.GetAll()).ReturnsLazily(() => cacheItems);
 
-		endpoint = new GetEndpoint(cache, settings, thread);
+		endpoint = new GetEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 
 		SetRequestOnEndpoint(string.Empty, ResponsePath);
 	}

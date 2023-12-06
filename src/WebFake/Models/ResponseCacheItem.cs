@@ -1,8 +1,7 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
-using FatCat.WebFake.ServiceModels;
 
-namespace FatCat.WebFake;
+namespace FatCat.WebFake.Models;
 
 public class ResponseCacheItem : EqualObject, ICacheItem
 {

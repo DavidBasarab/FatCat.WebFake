@@ -1,14 +1,21 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
-	: WebFakeEndpoint(cache, settings, thread)
+public class PostEndpoint(
+	IFatCatCache<ResponseCacheItem> responseCache,
+	IWebFakeSettings settings,
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> requestCache,
+	IGenerator generator,
+	IDateTimeUtilities dateTimeUtilities
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator, dateTimeUtilities)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -16,21 +23,14 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	}
 
 	[HttpPost("{*url}")]
-	public override async Task<WebResult> DoAction()
+	public override Task<WebResult> DoAction()
 	{
-		if (IsResponseEntry())
-		{
-			return await AddResponseEntry();
-		}
-
-		return await ProcessRequest();
+		return IsResponseEntry() ? AddResponseEntry() : ProcessRequest();
 	}
 
 	private async Task<WebResult> AddResponseEntry()
 	{
-		using var reader = new StreamReader(Request.Body);
-
-		var body = await reader.ReadToEndAsync();
+		var body = await GetRequestBody();
 
 		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
 
@@ -46,7 +46,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
 
-		cache.Add(new ResponseCacheItem { Entry = entryRequest });
+		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
 
 		return Ok(ResponseCodes.EntryAdded);
 	}
@@ -55,6 +55,6 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	{
 		var cacheId = $"{entryRequest.Verb}-{entryRequest.Path}";
 
-		return cache.InCache(cacheId);
+		return responseCache.InCache(cacheId);
 	}
 }

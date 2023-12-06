@@ -3,9 +3,8 @@ using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.WebServer;
 using FatCat.Toolkit.WebServer.Testing;
-using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 using FluentAssertions;
 using Humanizer;
 using Newtonsoft.Json;
@@ -17,6 +16,9 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	where TEndpoint : WebFakeEndpoint
 {
 	private const string Path = "/Some/Path/That/I/Am/Getting";
+	private readonly string clientRequestId = Faker.RandomString();
+	private readonly DateTime currentTime = Faker.RandomDateTime();
+	private readonly string defaultRequestBody = Faker.RandomString();
 	private readonly EntryResponse response = Faker.Create<EntryResponse>();
 	private EntryRequest entryRequest;
 
@@ -29,16 +31,17 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 
 		entryRequest = Faker.Create<EntryRequest>(afterCreate: i => i.Response = response);
 
+		SetUpDateTimeUtilities();
+		SetUpGenerator();
 		SetUpResponse();
-		SetRequestOnEndpoint(Path);
+		SetRequestOnEndpoint(defaultRequestBody, Path);
 		SetUpCache();
 	}
 
 	[Fact]
 	public async Task AddHeadersIfPopulated()
 	{
-		response.Headers.Add("x-fake1", "fake1");
-		response.Headers.Add("x-fake34", "fake34");
+		AddHeaders();
 
 		await ExecuteEndpointAction();
 
@@ -99,6 +102,22 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	}
 
 	[Fact]
+	public async Task GenerateAnIdForTheRequest()
+	{
+		await ExecuteEndpointAction();
+
+		A.CallTo(() => generator.NewId()).MustHaveHappened();
+	}
+
+	[Fact]
+	public async Task GetCurrentDateTime()
+	{
+		await ExecuteEndpointAction();
+
+		A.CallTo(() => dateTimeUtilities.UtcNow()).MustHaveHappened();
+	}
+
+	[Fact]
 	public async Task GetEntryRequestFromCache()
 	{
 		await ExecuteEndpointAction();
@@ -125,6 +144,35 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	}
 
 	[Fact]
+	public async Task SaveCreateRequestInCache()
+	{
+		AddHeaders();
+
+		await ExecuteEndpointAction();
+
+		var headers = new Dictionary<string, string>
+		{
+			{ "Content-Length", $"{defaultRequestBody.Length}" },
+			{ "Content-Type", "application/json" },
+			{ "Host", "localhost:5000" }
+		};
+
+		var clientRequest = new ClientRequest
+		{
+			ContentType = "application/json",
+			Headers = headers,
+			Verb = Verb,
+			RequestBody = defaultRequestBody,
+			RequestId = clientRequestId,
+			RequestTime = currentTime
+		};
+
+		var cacheItem = new ClientRequestCacheItem(clientRequest);
+
+		A.CallTo(() => clientRequestCache.Add(cacheItem, default)).MustHaveHappened();
+	}
+
+	[Fact]
 	public async Task WaitIfDelayIsSet()
 	{
 		response.Delay = 3.Seconds();
@@ -136,9 +184,15 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 
 	protected abstract TEndpoint CreateEndpoint();
 
-	private async Task<WebResult> ExecuteEndpointAction()
+	private void AddHeaders()
 	{
-		return await endpoint.DoAction();
+		response.Headers.Add("x-fake1", "fake1");
+		response.Headers.Add("x-fake34", "fake34");
+	}
+
+	private Task<WebResult> ExecuteEndpointAction()
+	{
+		return endpoint.DoAction();
 	}
 
 	private HttpVerb GetInvalidVerb()
@@ -162,6 +216,16 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 			.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
 	}
 
+	private void SetUpDateTimeUtilities()
+	{
+		A.CallTo(() => dateTimeUtilities.UtcNow()).ReturnsLazily(() => currentTime);
+	}
+
+	private void SetUpGenerator()
+	{
+		A.CallTo(() => generator.NewId()).ReturnsLazily(() => clientRequestId);
+	}
+
 	private void SetUpResponse()
 	{
 		var model = Faker.Create<TestModel>();
@@ -169,6 +233,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 		entryRequest.Verb = Verb;
 
 		response.Headers.Clear();
+
 		response.ContentType = "application/json; charset=UTF-8";
 		response.Body = JsonConvert.SerializeObject(model);
 		response.HttpStatusCode = HttpStatusCode.OK;
