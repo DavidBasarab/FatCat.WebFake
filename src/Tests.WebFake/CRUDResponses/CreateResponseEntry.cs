@@ -2,7 +2,6 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.WebServer.Testing;
-using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.Models;
 using Newtonsoft.Json;
@@ -24,7 +23,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new PostEndpoint(cache, settings, thread);
+		endpoint = new PostEndpoint(cache, settings, thread, clientRequestCache);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}

@@ -6,8 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
-	: WebFakeEndpoint(cache, settings, thread)
+public class DeleteEndpoint(
+	IFatCatCache<ResponseCacheItem> responseCache,
+	IWebFakeSettings settings,
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> requestCache
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -31,7 +35,7 @@ public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetti
 
 		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty);
 
-		cache.Remove(pathToRemove.ToLower());
+		responseCache.Remove(pathToRemove.ToLower());
 
 		return Ok(ResponseCodes.EntryRemoved);
 	}

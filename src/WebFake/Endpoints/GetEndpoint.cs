@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
-	: WebFakeEndpoint(cache, settings, thread)
+public class GetEndpoint(
+	IFatCatCache<ResponseCacheItem> responseCache,
+	IWebFakeSettings settings,
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> requestCache
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -22,7 +26,7 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 		{
 			ConsoleLog.WriteMagenta("Getting all items");
 
-			var allItems = cache.GetAll();
+			var allItems = responseCache.GetAll();
 
 			ConsoleLog.WriteMagenta($"Returning all items => {allItems.Count}");
 

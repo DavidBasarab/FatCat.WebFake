@@ -7,8 +7,12 @@ using Newtonsoft.Json;
 
 namespace FatCat.WebFake.Endpoints;
 
-public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
-	: WebFakeEndpoint(cache, settings, thread)
+public class PostEndpoint(
+	IFatCatCache<ResponseCacheItem> responceCache,
+	IWebFakeSettings settings,
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> requestCache
+) : WebFakeEndpoint(responceCache, settings, thread, requestCache)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -46,7 +50,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
 
-		cache.Add(new ResponseCacheItem { Entry = entryRequest });
+		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
 
 		return Ok(ResponseCodes.EntryAdded);
 	}
@@ -55,6 +59,6 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 	{
 		var cacheId = $"{entryRequest.Verb}-{entryRequest.Path}";
 
-		return cache.InCache(cacheId);
+		return responseCache.InCache(cacheId);
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
-using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFake.Models;
 using Xunit;
@@ -16,7 +15,7 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	{
 		var fullEndingPath = $"{ResponsePath}{pathToDelete}";
 
-		endpoint = new DeleteEndpoint(cache, settings, thread);
+		endpoint = new DeleteEndpoint(cache, settings, thread, clientRequestCache);
 
 		SetRequestOnEndpoint(fullEndingPath);
 	}
@@ -34,27 +33,27 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	}
 
 	[Fact]
-	public void DeleteTheResponse()
+	public async Task DeleteTheResponse()
 	{
-		endpoint.DoAction();
+		await endpoint.DoAction();
 
 		A.CallTo(() => cache.Remove(pathToDelete)).MustHaveHappened();
 	}
 
 	[Fact]
-	public void GetFakeIdFromSettings()
+	public async Task GetFakeIdFromSettings()
 	{
-		endpoint.DoAction();
+		await endpoint.DoAction();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
 
 	[Fact]
-	public void IfStartingWithResponsePathDoNothing()
+	public async Task IfStartingWithResponsePathDoNothing()
 	{
 		SetRequestOnEndpoint(pathToDelete);
 
-		endpoint.DoAction();
+		await endpoint.DoAction();
 
 		A.CallTo(() => cache.Remove(A<string>._)).MustNotHaveHappened();
 	}

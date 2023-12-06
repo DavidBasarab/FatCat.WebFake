@@ -8,12 +8,14 @@ using Microsoft.Extensions.Primitives;
 namespace FatCat.WebFake.Endpoints;
 
 public abstract class WebFakeEndpoint(
-	IFatCatCache<ResponseCacheItem> cache,
+	IFatCatCache<ResponseCacheItem> responseCache,
 	IWebFakeSettings settings,
-	IThread thread
+	IThread thread,
+	IFatCatCache<ClientRequestCacheItem> clientRequestCache
 ) : Endpoint
 {
-	protected readonly IFatCatCache<ResponseCacheItem> cache = cache;
+	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;
+	protected readonly IFatCatCache<ClientRequestCacheItem> clientRequestCache = clientRequestCache;
 
 	protected string ResponsePath
 	{
@@ -44,7 +46,7 @@ public abstract class WebFakeEndpoint(
 
 		var cacheId = $"{SupportedVerb}-{path}";
 
-		var cacheItem = cache.Get(cacheId);
+		var cacheItem = responseCache.Get(cacheId);
 
 		if (cacheItem is null)
 		{
