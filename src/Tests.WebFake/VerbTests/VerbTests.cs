@@ -20,7 +20,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	private readonly EntryResponse response = Faker.Create<EntryResponse>();
 	private EntryRequest entryRequest;
 
-	protected abstract string HttpMethod { get; }
+	protected abstract HttpVerb Verb { get; }
 
 	protected VerbTests()
 	{
@@ -117,7 +117,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	[Fact]
 	public async Task IfRequestDoesMatchHttpVerbThenReturnNotFound()
 	{
-		entryRequest.HttpMethod = $"Different{HttpMethod}";
+		entryRequest.Verb = GetInvalidVerb();
 
 		await TestEndpointReturnsNotFound();
 	}
@@ -136,17 +136,32 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 
 	protected abstract Task<WebResult> ExecuteEndpointAction();
 
+	private HttpVerb GetInvalidVerb()
+	{
+		var values = Enum.GetValues<HttpVerb>();
+
+		foreach (var httpVerb in values)
+		{
+			if (httpVerb != Verb)
+			{
+				return httpVerb;
+			}
+		}
+
+		return values.First();
+	}
+
 	private void SetUpCache()
 	{
 		A.CallTo(() => cache.Get(A<string>._))
-		.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
+			.ReturnsLazily(() => entryRequest is null ? null : new ResponseCacheItem { Entry = entryRequest });
 	}
 
 	private void SetUpResponse()
 	{
 		var model = Faker.Create<TestModel>();
 
-		entryRequest.HttpMethod = HttpMethod;
+		entryRequest.Verb = Verb;
 
 		response.Headers.Clear();
 		response.ContentType = "application/json; charset=UTF-8";

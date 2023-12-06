@@ -1,13 +1,14 @@
 ﻿using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Endpoints;
+using FatCat.WebFake.ServiceModels;
 
 namespace Tests.FatCat.WebFake.VerbTests;
 
 public class PostTests : VerbTests<PostEndpoint>
 {
-	protected override string HttpMethod
+	protected override HttpVerb Verb
 	{
-		get => "POST";
+		get => HttpVerb.Post;
 	}
 
 	protected override PostEndpoint CreateEndpoint()
