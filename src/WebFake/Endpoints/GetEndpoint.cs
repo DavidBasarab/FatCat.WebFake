@@ -21,21 +21,33 @@ public class GetEndpoint(
 	{
 		get => HttpVerb.Get;
 	}
+	protected string ClientRequestPath
+	{
+		get => $"/{settings.FakeId}/request";
+	}
 
 	[HttpGet("{*url}")]
 	public override async Task<WebResult> DoAction()
 	{
 		if (IsResponseEntry())
 		{
-			ConsoleLog.WriteMagenta("Getting all items");
-
 			var allItems = responseCache.GetAll();
-
-			ConsoleLog.WriteMagenta($"Returning all items => {allItems.Count}");
 
 			return Ok(allItems.Select(i => i.Entry));
 		}
 
+		if (IsGetClientRequest())
+		{
+			var requestItems = clientRequestCache.GetAll();
+		}
+
 		return await ProcessRequest();
+	}
+
+	private bool IsGetClientRequest()
+	{
+		var path = GetPath();
+
+		return path.StartsWith(ClientRequestPath);
 	}
 }

@@ -20,6 +20,7 @@ public abstract class WebFakeEndpoint(
 {
 	protected readonly IFatCatCache<ClientRequestCacheItem> clientRequestCache = clientRequestCache;
 	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;
+	protected IWebFakeSettings settings = settings;
 
 	protected string ResponsePath
 	{
