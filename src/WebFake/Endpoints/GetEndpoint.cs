@@ -1,4 +1,5 @@
 ﻿using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.ServiceModels;
@@ -21,7 +22,11 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 
 		if (IsResponseEntry())
 		{
+			ConsoleLog.WriteMagenta("Getting all items");
+
 			var allItems = cache.GetAll();
+
+			ConsoleLog.WriteMagenta($"Returning all items => {allItems.Count}");
 
 			return Ok(allItems.Select(i => i.Entry));
 		}
