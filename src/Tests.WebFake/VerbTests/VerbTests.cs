@@ -136,7 +136,10 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 
 	protected abstract TEndpoint CreateEndpoint();
 
-	protected abstract Task<WebResult> ExecuteEndpointAction();
+	private async Task<WebResult> ExecuteEndpointAction()
+	{
+		return await endpoint.DoAction();
+	}
 
 	private HttpVerb GetInvalidVerb()
 	{

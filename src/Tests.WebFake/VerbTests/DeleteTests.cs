@@ -15,9 +15,4 @@ public class DeleteTests : VerbTests<DeleteEndpoint>
 	{
 		return new DeleteEndpoint(cache, settings, thread);
 	}
-
-	protected override async Task<WebResult> ExecuteEndpointAction()
-	{
-		return await endpoint.DoAction();
-	}
 }
