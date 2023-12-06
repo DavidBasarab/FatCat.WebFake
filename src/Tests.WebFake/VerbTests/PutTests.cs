@@ -12,6 +12,6 @@ public class PutTests : VerbTests<PutEndpoint>
 
 	protected override PutEndpoint CreateEndpoint()
 	{
-		return new PutEndpoint(cache, settings, thread, clientRequestCache, generator);
+		return new PutEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 	}
 }

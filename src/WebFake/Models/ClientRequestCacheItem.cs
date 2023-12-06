@@ -1,8 +1,9 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 
 namespace FatCat.WebFake.Models;
 
-public class ClientRequestCacheItem : ICacheItem
+public class ClientRequestCacheItem : EqualObject, ICacheItem
 {
 	public string CacheId
 	{

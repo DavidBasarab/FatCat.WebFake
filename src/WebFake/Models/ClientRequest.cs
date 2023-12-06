@@ -1,6 +1,8 @@
-﻿namespace FatCat.WebFake.Models;
+﻿using FatCat.Toolkit;
 
-public class ClientRequest
+namespace FatCat.WebFake.Models;
+
+public class ClientRequest : EqualObject
 {
 	public string ContentType { get; set; }
 

@@ -13,8 +13,9 @@ public class GetEndpoint(
 	IWebFakeSettings settings,
 	IThread thread,
 	IFatCatCache<ClientRequestCacheItem> requestCache,
-	IGenerator generator
-) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator)
+	IGenerator generator,
+	IDateTimeUtilities dateTimeUtilities
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator, dateTimeUtilities)
 {
 	protected override HttpVerb SupportedVerb
 	{

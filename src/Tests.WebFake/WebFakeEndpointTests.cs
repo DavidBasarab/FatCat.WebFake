@@ -22,6 +22,8 @@ public class WebFakeEndpointTests<TEndpoint>
 		IFatCatCache<ClientRequestCacheItem>
 	>();
 
+	protected readonly IDateTimeUtilities dateTimeUtilities = A.Fake<IDateTimeUtilities>();
+
 	protected readonly string fakeId = Faker.RandomString();
 	protected readonly IGenerator generator = A.Fake<IGenerator>();
 	protected readonly IWebFakeSettings settings = A.Fake<IWebFakeSettings>();

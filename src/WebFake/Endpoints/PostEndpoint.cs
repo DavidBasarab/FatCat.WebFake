@@ -13,8 +13,9 @@ public class PostEndpoint(
 	IWebFakeSettings settings,
 	IThread thread,
 	IFatCatCache<ClientRequestCacheItem> requestCache,
-	IGenerator generator
-) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator)
+	IGenerator generator,
+	IDateTimeUtilities dateTimeUtilities
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator, dateTimeUtilities)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -29,9 +30,7 @@ public class PostEndpoint(
 
 	private async Task<WebResult> AddResponseEntry()
 	{
-		using var reader = new StreamReader(Request.Body);
-
-		var body = await reader.ReadToEndAsync();
+		var body = await GetRequestBody();
 
 		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
 

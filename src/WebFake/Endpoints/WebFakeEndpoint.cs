@@ -5,6 +5,7 @@ using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Models;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
+using Endpoint = FatCat.Toolkit.WebServer.Endpoint;
 
 namespace FatCat.WebFake.Endpoints;
 
@@ -13,11 +14,12 @@ public abstract class WebFakeEndpoint(
 	IWebFakeSettings settings,
 	IThread thread,
 	IFatCatCache<ClientRequestCacheItem> clientRequestCache,
-	IGenerator generator
+	IGenerator generator,
+	IDateTimeUtilities dateTimeUtilities
 ) : Endpoint
 {
-	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;
 	protected readonly IFatCatCache<ClientRequestCacheItem> clientRequestCache = clientRequestCache;
+	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;
 
 	protected string ResponsePath
 	{
@@ -35,6 +37,18 @@ public abstract class WebFakeEndpoint(
 		return displayUri.PathAndQuery.ToLower();
 	}
 
+	protected async Task<string> GetRequestBody()
+	{
+		if (Request.Body.Length == 0)
+		{
+			return string.Empty;
+		}
+
+		using var reader = new StreamReader(Request.Body);
+
+		return await reader.ReadToEndAsync();
+	}
+
 	protected bool IsResponseEntry()
 	{
 		var path = GetPath();
@@ -44,6 +58,8 @@ public abstract class WebFakeEndpoint(
 
 	protected async Task<WebResult> ProcessRequest()
 	{
+		await SaveClientRequest();
+
 		var path = GetPath();
 
 		var cacheId = $"{SupportedVerb}-{path}";
@@ -78,5 +94,34 @@ public abstract class WebFakeEndpoint(
 		};
 
 		return webResult;
+	}
+
+	private Dictionary<string, string> GetRequestHeaders()
+	{
+		var headers = new Dictionary<string, string>();
+
+		foreach (var currentHeader in Request.Headers)
+		{
+			var value = currentHeader.Value[0];
+
+			headers.Add(currentHeader.Key, value);
+		}
+
+		return headers;
+	}
+
+	private async Task SaveClientRequest()
+	{
+		var clientRequest = new ClientRequest
+		{
+			ContentType = Request.ContentType,
+			Headers = GetRequestHeaders(),
+			Verb = SupportedVerb,
+			RequestBody = await GetRequestBody(),
+			RequestId = generator.NewId(),
+			RequestTime = dateTimeUtilities.UtcNow()
+		};
+
+		clientRequestCache.Add(new ClientRequestCacheItem(clientRequest));
 	}
 }

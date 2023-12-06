@@ -23,7 +23,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new PostEndpoint(cache, settings, thread, clientRequestCache, generator);
+		endpoint = new PostEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}

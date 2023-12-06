@@ -12,6 +12,6 @@ public class GetTests : VerbTests<GetEndpoint>
 
 	protected override GetEndpoint CreateEndpoint()
 	{
-		return new GetEndpoint(cache, settings, thread, clientRequestCache, generator);
+		return new GetEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 	}
 }
