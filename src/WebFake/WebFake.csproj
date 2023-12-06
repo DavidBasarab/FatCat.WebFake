@@ -41,7 +41,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CSharpier.MsBuild" Version="0.26.3">
+        <PackageReference Include="CSharpier.MsBuild" Version="0.26.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
