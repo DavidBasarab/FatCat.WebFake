@@ -29,3 +29,6 @@ Completed
 - DELETE endpoint to remove a response from the server
 - All control requests will be kept in a cache and not stored between restarts.
 - Use IConfiguration for the unique identifier that can be passed in
+- HttpVerbs to supported
+    * GET
+    * POST
