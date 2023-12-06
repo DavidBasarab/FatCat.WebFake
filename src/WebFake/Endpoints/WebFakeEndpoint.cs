@@ -40,11 +40,6 @@ public abstract class WebFakeEndpoint(
 
 	protected async Task<string> GetRequestBody()
 	{
-		if (Request.Body.Length == 0)
-		{
-			return string.Empty;
-		}
-
 		using var reader = new StreamReader(Request.Body);
 
 		return await reader.ReadToEndAsync();
