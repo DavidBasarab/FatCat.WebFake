@@ -1,12 +1,13 @@
 ﻿TODO : 
 
-- A GET endpoint that will give all request that have been made to the server along with the body of the request.
+
 
 - Run either in console or as docker container.    
 
 Completed
 
 - Run as console application
+- A GET endpoint that will give all request that have been made to the server along with the body of the request.
 - Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
 - Ideally a user will do a post with a request body that looks like this:
     * HttpMethod
