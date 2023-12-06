@@ -2,14 +2,19 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
+using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace FatCat.WebFake.Endpoints;
 
 public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
 	: WebFakeEndpoint(cache, settings, thread)
 {
+	protected override HttpVerb SupportedVerb
+	{
+		get => HttpVerb.Get;
+	}
+
 	[HttpGet("{*url}")]
 	public async Task<WebResult> DoGet()
 	{
@@ -17,37 +22,15 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 
 		if (IsResponseEntry())
 		{
+			ConsoleLog.WriteMagenta("Getting all items");
+
 			var allItems = cache.GetAll();
+
+			ConsoleLog.WriteMagenta($"Returning all items => {allItems.Count}");
 
 			return Ok(allItems.Select(i => i.Entry));
 		}
 
-		var path = GetPath();
-
-		var cacheItem = cache.Get(path);
-
-		if (cacheItem?.Entry?.Response == null)
-		{
-			return WebResult.NotFound();
-		}
-
-		var response = cacheItem.Entry.Response;
-
-		if (response.Delay is not null)
-		{
-			await thread.Sleep(response.Delay.Value);
-		}
-
-		foreach (var header in response.Headers)
-		{
-			Response.Headers.TryAdd(header.Key, new StringValues(header.Value));
-		}
-
-		var webResult = new WebResult(response.HttpStatusCode, response.Body)
-		{
-			ContentType = response.ContentType
-		};
-
-		return webResult;
+		return await ProcessRequest();
 	}
 }

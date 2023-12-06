@@ -4,20 +4,20 @@ using FatCat.WebFake.ServiceModels;
 
 namespace Tests.FatCat.WebFake.VerbTests;
 
-public class GetTests : VerbTests<GetEndpoint>
+public class PostTests : VerbTests<PostEndpoint>
 {
 	protected override HttpVerb Verb
 	{
-		get => HttpVerb.Get;
+		get => HttpVerb.Post;
 	}
 
-	protected override GetEndpoint CreateEndpoint()
+	protected override PostEndpoint CreateEndpoint()
 	{
-		return new GetEndpoint(cache, settings, thread);
+		return new PostEndpoint(cache, settings, thread);
 	}
 
 	protected override async Task<WebResult> ExecuteEndpointAction()
 	{
-		return await endpoint.DoGet();
+		return await endpoint.DoPost();
 	}
 }

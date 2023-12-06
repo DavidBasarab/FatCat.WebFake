@@ -1,6 +1,7 @@
 ﻿using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
+using FatCat.WebFake.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
@@ -8,6 +9,11 @@ namespace FatCat.WebFake.Endpoints;
 public class DeleteEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
 	: WebFakeEndpoint(cache, settings, thread)
 {
+	protected override HttpVerb SupportedVerb
+	{
+		get => HttpVerb.Delete;
+	}
+
 	[HttpDelete("{*url}")]
 	public WebResult ProcessDelete()
 	{

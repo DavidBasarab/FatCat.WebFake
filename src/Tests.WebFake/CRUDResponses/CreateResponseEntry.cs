@@ -12,9 +12,11 @@ namespace Tests.FatCat.WebFake.CRUDResponses;
 
 public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 {
-	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(
-		afterCreate: i => i.Path = Faker.RandomString("/UpperPath")
-	);
+	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>(i =>
+	{
+		i.Path = Faker.RandomString("/UpperPath");
+		i.Verb = HttpVerb.Get;
+	});
 
 	private bool inCache;
 
@@ -32,7 +34,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		var requestCopy = entryRequest.DeepCopy();
 
@@ -46,7 +48,25 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	[Fact]
 	public void BeAPost()
 	{
-		endpoint.Should().BePost(nameof(PostEndpoint.ProcessPost), "{*url}");
+		endpoint.Should().BePost(nameof(PostEndpoint.DoPost), "{*url}");
+	}
+
+	[Fact]
+	public async Task CanCreateAnEntryWithSamePathButDifferentVerbs()
+	{
+		entryRequest.Verb = HttpVerb.Post;
+
+		SetUpEntryRequest();
+
+		await endpoint.DoPost();
+
+		var requestCopy = entryRequest.DeepCopy();
+
+		requestCopy.Path = requestCopy.Path.ToLower();
+
+		var expectedCacheItem = new ResponseCacheItem { Entry = requestCopy };
+
+		A.CallTo(() => cache.Add(expectedCacheItem, default)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -54,15 +74,15 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
-		A.CallTo(() => cache.InCache(entryRequest.Path.ToLower())).MustHaveHappened();
+		A.CallTo(() => cache.InCache($"{entryRequest.Verb}-{entryRequest.Path.ToLower()}")).MustHaveHappened();
 	}
 
 	[Fact]
 	public async Task GetWebFakeId()
 	{
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => settings.FakeId).MustHaveHappened();
 	}
@@ -72,7 +92,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), "/response");
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -83,7 +103,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		await endpoint.ProcessPost();
+		await endpoint.DoPost();
 
 		A.CallTo(() => cache.Add(A<ResponseCacheItem>._, default)).MustNotHaveHappened();
 	}
@@ -94,7 +114,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 		SetUpEntryRequest();
 		inCache = true;
 
-		endpoint.ProcessPost().Should().BeBadRequest("entry-already-exists");
+		endpoint.DoPost().Should().BeBadRequest("entry-already-exists");
 	}
 
 	[Fact]
@@ -104,7 +124,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 
 		SetUpEntryRequest();
 
-		endpoint.ProcessPost().Should().BeBadRequest(ResponseCodes.PathMustStartWithSlash);
+		endpoint.DoPost().Should().BeBadRequest(ResponseCodes.PathMustStartWithSlash);
 	}
 
 	[Fact]
@@ -112,7 +132,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		SetUpEntryRequest();
 
-		endpoint.ProcessPost().Should().BeOk();
+		endpoint.DoPost().Should().BeOk();
 	}
 
 	private void SetUpEntryRequest()

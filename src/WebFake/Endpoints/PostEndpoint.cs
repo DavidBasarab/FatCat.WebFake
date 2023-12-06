@@ -10,15 +10,20 @@ namespace FatCat.WebFake.Endpoints;
 public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings settings, IThread thread)
 	: WebFakeEndpoint(cache, settings, thread)
 {
+	protected override HttpVerb SupportedVerb
+	{
+		get => HttpVerb.Post;
+	}
+
 	[HttpPost("{*url}")]
-	public async Task<WebResult> ProcessPost()
+	public async Task<WebResult> DoPost()
 	{
 		if (IsResponseEntry())
 		{
 			return await AddResponseEntry();
 		}
 
-		return NotImplemented();
+		return await ProcessRequest();
 	}
 
 	private async Task<WebResult> AddResponseEntry()
@@ -36,7 +41,7 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 			return BadRequest(ResponseCodes.PathMustStartWithSlash);
 		}
 
-		if (cache.InCache(entryRequest.Path))
+		if (IsInCache(entryRequest))
 		{
 			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
@@ -44,5 +49,12 @@ public class PostEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSetting
 		cache.Add(new ResponseCacheItem { Entry = entryRequest });
 
 		return Ok(ResponseCodes.EntryAdded);
+	}
+
+	private bool IsInCache(EntryRequest entryRequest)
+	{
+		var cacheId = $"{entryRequest.Verb}-{entryRequest.Path}";
+
+		return cache.InCache(cacheId);
 	}
 }

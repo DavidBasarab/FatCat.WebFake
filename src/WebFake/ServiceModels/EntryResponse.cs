@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using FatCat.Toolkit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FatCat.WebFake.ServiceModels;
 
@@ -13,5 +15,6 @@ public class EntryResponse : EqualObject
 
 	public Dictionary<string, string> Headers { get; set; } = new();
 
+	[JsonConverter(typeof(StringEnumConverter))]
 	public HttpStatusCode HttpStatusCode { get; set; }
 }
