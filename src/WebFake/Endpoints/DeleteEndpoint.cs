@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Models;
@@ -10,8 +11,9 @@ public class DeleteEndpoint(
 	IFatCatCache<ResponseCacheItem> responseCache,
 	IWebFakeSettings settings,
 	IThread thread,
-	IFatCatCache<ClientRequestCacheItem> requestCache
-) : WebFakeEndpoint(responseCache, settings, thread, requestCache)
+	IFatCatCache<ClientRequestCacheItem> requestCache,
+	IGenerator generator
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator)
 {
 	protected override HttpVerb SupportedVerb
 	{

@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Models;
@@ -11,7 +12,8 @@ public abstract class WebFakeEndpoint(
 	IFatCatCache<ResponseCacheItem> responseCache,
 	IWebFakeSettings settings,
 	IThread thread,
-	IFatCatCache<ClientRequestCacheItem> clientRequestCache
+	IFatCatCache<ClientRequestCacheItem> clientRequestCache,
+	IGenerator generator
 ) : Endpoint
 {
 	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;

@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Models;
@@ -8,11 +9,12 @@ using Newtonsoft.Json;
 namespace FatCat.WebFake.Endpoints;
 
 public class PostEndpoint(
-	IFatCatCache<ResponseCacheItem> responceCache,
+	IFatCatCache<ResponseCacheItem> responseCache,
 	IWebFakeSettings settings,
 	IThread thread,
-	IFatCatCache<ClientRequestCacheItem> requestCache
-) : WebFakeEndpoint(responceCache, settings, thread, requestCache)
+	IFatCatCache<ClientRequestCacheItem> requestCache,
+	IGenerator generator
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator)
 {
 	protected override HttpVerb SupportedVerb
 	{
@@ -20,14 +22,9 @@ public class PostEndpoint(
 	}
 
 	[HttpPost("{*url}")]
-	public override async Task<WebResult> DoAction()
+	public override Task<WebResult> DoAction()
 	{
-		if (IsResponseEntry())
-		{
-			return await AddResponseEntry();
-		}
-
-		return await ProcessRequest();
+		return IsResponseEntry() ? AddResponseEntry() : ProcessRequest();
 	}
 
 	private async Task<WebResult> AddResponseEntry()

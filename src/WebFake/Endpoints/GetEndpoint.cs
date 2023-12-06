@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Caching;
+﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
@@ -11,8 +12,9 @@ public class GetEndpoint(
 	IFatCatCache<ResponseCacheItem> responseCache,
 	IWebFakeSettings settings,
 	IThread thread,
-	IFatCatCache<ClientRequestCacheItem> requestCache
-) : WebFakeEndpoint(responseCache, settings, thread, requestCache)
+	IFatCatCache<ClientRequestCacheItem> requestCache,
+	IGenerator generator
+) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator)
 {
 	protected override HttpVerb SupportedVerb
 	{

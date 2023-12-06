@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using FakeItEasy;
 using FatCat.Fakes;
+using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Threading;
@@ -22,6 +23,7 @@ public class WebFakeEndpointTests<TEndpoint>
 	>();
 
 	protected readonly string fakeId = Faker.RandomString();
+	protected readonly IGenerator generator = A.Fake<IGenerator>();
 	protected readonly IWebFakeSettings settings = A.Fake<IWebFakeSettings>();
 	protected readonly IThread thread = A.Fake<IThread>();
 
@@ -32,9 +34,15 @@ public class WebFakeEndpointTests<TEndpoint>
 		get => $"/{fakeId}/response";
 	}
 
-	protected WebFakeEndpointTests() { A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId); }
+	protected WebFakeEndpointTests()
+	{
+		A.CallTo(() => settings.FakeId).ReturnsLazily(() => fakeId);
+	}
 
-	protected void SetRequestOnEndpoint(string endingPath) { SetRequestOnEndpoint(string.Empty, endingPath); }
+	protected void SetRequestOnEndpoint(string endingPath)
+	{
+		SetRequestOnEndpoint(string.Empty, endingPath);
+	}
 
 	protected void SetRequestOnEndpoint(string request, string endingPath)
 	{

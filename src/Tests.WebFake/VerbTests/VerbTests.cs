@@ -56,6 +56,12 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 		result.StatusCode.Should().Be(HttpStatusCode.OK);
 	}
 
+	[Fact(Skip = "Need to create id first")]
+	public void SaveCreateRequestInCache()
+	{
+		true.Should().BeFalse();
+	}
+
 	[Fact]
 	public async Task CanChangeContentType()
 	{

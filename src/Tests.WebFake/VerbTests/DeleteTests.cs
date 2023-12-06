@@ -13,6 +13,6 @@ public class DeleteTests : VerbTests<DeleteEndpoint>
 
 	protected override DeleteEndpoint CreateEndpoint()
 	{
-		return new DeleteEndpoint(cache, settings, thread, clientRequestCache);
+		return new DeleteEndpoint(cache, settings, thread, clientRequestCache, generator);
 	}
 }

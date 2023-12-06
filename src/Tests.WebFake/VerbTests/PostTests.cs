@@ -12,6 +12,6 @@ public class PostTests : VerbTests<PostEndpoint>
 
 	protected override PostEndpoint CreateEndpoint()
 	{
-		return new PostEndpoint(cache, settings, thread, clientRequestCache);
+		return new PostEndpoint(cache, settings, thread, clientRequestCache, generator);
 	}
 }
