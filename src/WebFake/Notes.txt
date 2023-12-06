@@ -4,10 +4,6 @@
 
 - Run either in console or as docker container.    
 
-- HttpVerbs to support
-    * PUT
-    
-
 Completed
 
 - Run as console application
@@ -31,3 +27,4 @@ Completed
     * GET
     * POST
     * DELETE
+    * PUT
