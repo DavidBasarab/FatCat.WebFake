@@ -5,7 +5,7 @@ using FatCat.Toolkit.WebServer;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 using FluentAssertions;
 using Humanizer;
 using Newtonsoft.Json;

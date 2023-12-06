@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FatCat.WebFake.ServiceModels;
+namespace FatCat.WebFake.Models;
 
 public class EntryRequest : EqualObject
 {

@@ -1,6 +1,6 @@
 ﻿using FatCat.Toolkit.WebServer;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.ServiceModels;
+using FatCat.WebFake.Models;
 
 namespace Tests.FatCat.WebFake.VerbTests;
 

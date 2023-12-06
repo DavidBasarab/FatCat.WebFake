@@ -1,4 +1,4 @@
-﻿namespace FatCat.WebFake;
+﻿namespace FatCat.WebFake.Models;
 
 public class ResponseCodes
 {
