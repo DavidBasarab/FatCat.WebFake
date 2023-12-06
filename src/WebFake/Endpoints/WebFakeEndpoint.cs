@@ -22,6 +22,8 @@ public abstract class WebFakeEndpoint(
 
 	protected abstract HttpVerb SupportedVerb { get; }
 
+	public abstract Task<WebResult> DoAction();
+
 	protected string GetPath()
 	{
 		var displayUri = new Uri(Request.GetDisplayUrl());

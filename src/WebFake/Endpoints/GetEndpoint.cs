@@ -16,10 +16,8 @@ public class GetEndpoint(IFatCatCache<ResponseCacheItem> cache, IWebFakeSettings
 	}
 
 	[HttpGet("{*url}")]
-	public async Task<WebResult> DoGet()
+	public override async Task<WebResult> DoAction()
 	{
-		await Task.CompletedTask;
-
 		if (IsResponseEntry())
 		{
 			ConsoleLog.WriteMagenta("Getting all items");

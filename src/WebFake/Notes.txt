@@ -2,19 +2,16 @@
 
 
 - A GET endpoint that will give all request that have been made to the server along with the body of the request.
-- A DELETE endpoint that will clear all the responses and requests from the server.
-- If a request is made that does not have an entry then NOT FOUND is returned
 
 - Run either in console or as docker container.    
 
 - HttpVerbs to support
-    * GET
-    * POST
     * PUT
-    * DELETE
+    
 
 Completed
 
+- Run as console
 - Can pass in an ID or some identifier that will be used as the starting point for all the requests to control the fake server.
 - Ideally a user will do a post with a request body that looks like this:
     * HttpMethod
@@ -29,3 +26,9 @@ Completed
 - DELETE endpoint to remove a response from the server
 - All control requests will be kept in a cache and not stored between restarts.
 - Use IConfiguration for the unique identifier that can be passed in
+- If a request is made that does not have an entry then NOT FOUND is returned
+- A DELETE endpoint that will clear all the responses and requests from the server.
+- HttpVerbs to supported
+    * GET
+    * POST
+    * DELETE
