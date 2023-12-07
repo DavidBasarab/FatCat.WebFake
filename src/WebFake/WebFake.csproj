@@ -16,6 +16,7 @@
         <NoWarn>CS8002,CS1700</NoWarn>
         <SignAssembly>true</SignAssembly>
         <TargetFramework>net8.0</TargetFramework>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -47,5 +48,11 @@
         </PackageReference>
         <PackageReference Include="FatCat.Toolkit" Version="1.0.189"/>
         <PackageReference Include="FatCat.Toolkit.WebServer" Version="1.0.18"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>

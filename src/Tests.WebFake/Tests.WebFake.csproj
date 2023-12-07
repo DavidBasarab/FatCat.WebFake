@@ -8,6 +8,7 @@
         <AssemblyName>Tests.FatCat.WebFake</AssemblyName>
         <LangVersion>12</LangVersion>
         <OutputType>Library</OutputType>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <PropertyGroup>
