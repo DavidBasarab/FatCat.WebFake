@@ -22,11 +22,12 @@ public interface IWebFakeAPi
 
 public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 {
-	private IWebCallerFactory webCallerFactory = new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
-
 	public string FakeId { get; } = fakeId;
 
 	public Uri FakeUri { get; } = fakeUri;
+
+	public IWebCallerFactory WebCallerFactory { get; } =
+		new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
 
 	public Task<FatWebResponse> CreateResponse(EntryResponse response)
 	{
