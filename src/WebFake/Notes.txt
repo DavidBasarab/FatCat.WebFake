@@ -1,9 +1,6 @@
 ﻿TODO : 
 
 
-
-- Run either in console or as docker container.    
-
 Completed
 
 - Run as console application
@@ -29,3 +26,4 @@ Completed
     * POST
     * DELETE
     * PUT
+- Run either in console or as docker container.
