@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using FatCat.Toolkit.WebServer;
@@ -10,16 +11,14 @@ namespace FatCat.WebFake;
 
 public static class Program
 {
+	private static ToolkitWebApplicationSettings applicationSettings;
+
 	public static void Main(params string[] args)
 	{
-		var applicationSettings = new ToolkitWebApplicationSettings
+		applicationSettings = new ToolkitWebApplicationSettings
 		{
 			Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
-			ContainerAssemblies = new List<Assembly>
-			{
-				Assembly.GetExecutingAssembly(),
-				typeof(ToolkitWebApplication).Assembly
-			},
+			ContainerAssemblies = [Assembly.GetExecutingAssembly(), typeof(ToolkitWebApplication).Assembly],
 			OnWebApplicationStarted = Started,
 			Args = args,
 			BasePath = "/david"
@@ -76,6 +75,16 @@ public static class Program
 		try
 		{
 			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+
+			var settings = SystemScope.Container.Resolve<IWebFakeSettings>();
+
+			ConsoleLog.WriteGreen(
+				$"The settings are: {JsonConvert.SerializeObject(settings, Formatting.Indented)}"
+			);
+
+			ConsoleLog.WriteMagenta(
+				$"{JsonConvert.SerializeObject(applicationSettings.Args, Formatting.Indented)}"
+			);
 
 			// var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
 			//
