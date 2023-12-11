@@ -78,8 +78,13 @@ public static class Program
 
 			var settings = SystemScope.Container.Resolve<IWebFakeSettings>();
 
-			ConsoleLog.WriteGreen($"The settings are: {JsonConvert.SerializeObject(settings)}");
-			ConsoleLog.WriteMagenta($"{applicationSettings.Args}");
+			ConsoleLog.WriteGreen(
+				$"The settings are: {JsonConvert.SerializeObject(settings, Formatting.Indented)}"
+			);
+
+			ConsoleLog.WriteMagenta(
+				$"{JsonConvert.SerializeObject(applicationSettings.Args, Formatting.Indented)}"
+			);
 
 			// var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
 			//
