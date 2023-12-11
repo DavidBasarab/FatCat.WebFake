@@ -1,4 +1,6 @@
-﻿using FatCat.Toolkit.Web;
+﻿using FatCat.Toolkit.Json;
+using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi.Models;
 
 namespace FatCat.WebFakeApi;
@@ -20,6 +22,8 @@ public interface IWebFakeAPi
 
 public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 {
+	private IWebCallerFactory webCallerFactory = new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
+
 	public string FakeId { get; } = fakeId;
 
 	public Uri FakeUri { get; } = fakeUri;
