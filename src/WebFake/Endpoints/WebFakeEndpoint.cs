@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
 using Endpoint = FatCat.Toolkit.WebServer.Endpoint;

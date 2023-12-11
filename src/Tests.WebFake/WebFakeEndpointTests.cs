@@ -7,7 +7,6 @@ using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Threading;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

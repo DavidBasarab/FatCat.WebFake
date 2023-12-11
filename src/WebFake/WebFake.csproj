@@ -55,4 +55,8 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebFakeApi\WebFakeApi.csproj" />
+    </ItemGroup>
 </Project>

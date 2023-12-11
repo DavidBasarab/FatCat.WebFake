@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFake", "WebFake\WebFake.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.WebFake", "Tests.WebFake\Tests.WebFake.csproj", "{DED696F0-E861-41BE-853E-B585287FC7EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFakeApi", "WebFakeApi\WebFakeApi.csproj", "{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DED696F0-E861-41BE-853E-B585287FC7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DED696F0-E861-41BE-853E-B585287FC7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DED696F0-E861-41BE-853E-B585287FC7EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
