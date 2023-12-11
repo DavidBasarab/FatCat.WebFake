@@ -1,5 +1,6 @@
 ﻿TODO : 
 
+- WebFakeApi Nuget Package to be used with docker image
 
 Completed
 
