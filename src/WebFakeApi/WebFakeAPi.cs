@@ -53,8 +53,10 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 		return new FatWebResponse<List<ClientRequest>>(response);
 	}
 
-	public Task<FatWebResponse<List<EntryRequest>>> GetAllResponses()
+	public async Task<FatWebResponse<List<EntryRequest>>> GetAllResponses()
 	{
-		throw new NotImplementedException();
+		var response = await WebCaller.Get($"{FakeId}/response");
+
+		return new FatWebResponse<List<EntryRequest>>(response);
 	}
 }
