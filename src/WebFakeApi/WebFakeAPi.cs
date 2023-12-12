@@ -15,9 +15,9 @@ public interface IWebFakeAPi
 
 	Task<FatWebResponse> DeleteResponse(string pathToDelete);
 
-	Task<FatWebResponse<ClientRequest>> GetAllClientRequests();
+	Task<FatWebResponse<List<ClientRequest>>> GetAllClientRequests();
 
-	Task<FatWebResponse<EntryRequest>> GetAllResponses();
+	Task<FatWebResponse<List<EntryRequest>>> GetAllResponses();
 }
 
 public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
@@ -46,12 +46,14 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 		return WebCaller.Delete($"{FakeId}/response/{pathToDelete}");
 	}
 
-	public Task<FatWebResponse<ClientRequest>> GetAllClientRequests()
+	public async Task<FatWebResponse<List<ClientRequest>>> GetAllClientRequests()
 	{
-		throw new NotImplementedException();
+		var response = await WebCaller.Get($"{FakeId}/request");
+
+		return new FatWebResponse<List<ClientRequest>>(response);
 	}
 
-	public Task<FatWebResponse<EntryRequest>> GetAllResponses()
+	public Task<FatWebResponse<List<EntryRequest>>> GetAllResponses()
 	{
 		throw new NotImplementedException();
 	}
