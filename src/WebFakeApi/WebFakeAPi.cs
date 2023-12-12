@@ -11,7 +11,7 @@ public interface IWebFakeAPi
 
 	Uri FakeUri { get; }
 
-	Task<FatWebResponse> CreateResponse(EntryResponse response);
+	Task<FatWebResponse> CreateResponse(EntryResponse entryResponse);
 
 	Task<FatWebResponse> DeleteResponse(string pathToDelete);
 
@@ -22,16 +22,25 @@ public interface IWebFakeAPi
 
 public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 {
+	private IWebCaller webCaller;
+
 	public string FakeId { get; } = fakeId;
 
 	public Uri FakeUri { get; } = fakeUri;
 
-	public IWebCallerFactory WebCallerFactory { get; } =
+	public IWebCallerFactory WebCallerFactory { get; set; } =
 		new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
 
-	public Task<FatWebResponse> CreateResponse(EntryResponse response)
+	private IWebCaller WebCaller
 	{
-		throw new NotImplementedException();
+		get => webCaller ??= WebCallerFactory.GetWebCaller(FakeUri);
+	}
+
+	public async Task<FatWebResponse> CreateResponse(EntryResponse entryResponse)
+	{
+		var _ = await WebCaller.Post($"{FakeId}/response", entryResponse);
+
+		return null;
 	}
 
 	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
