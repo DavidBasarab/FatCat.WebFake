@@ -1,7 +1,9 @@
-﻿using FatCat.Toolkit.Json;
+﻿using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi.Models;
+using Newtonsoft.Json;
 
 namespace FatCat.WebFakeApi;
 
@@ -38,7 +40,11 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 
 	public Task<FatWebResponse> CreateEntryRequest(EntryRequest request)
 	{
-		return WebCaller.Post($"{FakeId}/response", request);
+		var json = JsonConvert.SerializeObject(request, Formatting.Indented);
+
+		ConsoleLog.WriteMagenta(json);
+
+		return WebCaller.Post($"{FakeId}/response", json);
 	}
 
 	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
