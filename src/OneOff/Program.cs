@@ -35,7 +35,7 @@ public static class Program
 		await CreateEntry(entryRequest);
 
 		entryRequest.Verb = HttpVerb.Delete;
-		entryRequest.Response.Body = "GOODBYE WORLD";
+		entryRequest.Response.Body = $"GOODBYE WORLD - {DateTime.Now:h:mm:ss tt zz}";
 
 		await CreateEntry(entryRequest);
 

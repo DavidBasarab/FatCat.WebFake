@@ -41,6 +41,11 @@ public class DeleteEndpoint(
 
 		ConsoleLog.WriteCyan($"Going to remove path <{pathToRemove}>");
 
+		if (!responseCache.InCache(pathToRemove.ToLower()))
+		{
+			return BadRequest("path-not-found");
+		}
+
 		responseCache.Remove(pathToRemove.ToLower());
 
 		return Ok(ResponseCodes.EntryRemoved);
