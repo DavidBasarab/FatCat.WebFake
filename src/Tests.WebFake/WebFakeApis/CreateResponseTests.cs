@@ -9,24 +9,24 @@ namespace Tests.FatCat.WebFake.WebFakeApis;
 
 public class CreateResponseTests : WebFakeApiTests
 {
-	private readonly EntryResponse entryResponse = Faker.Create<EntryResponse>();
-
-	protected override Task<FatWebResponse> DoTestAction()
-	{
-		return webFakeApi.CreateResponse(entryResponse);
-	}
+	private readonly EntryRequest entryRequest = Faker.Create<EntryRequest>();
 
 	[Fact]
 	public void ReturnWebCallerResponse()
 	{
-		webFakeApi.CreateResponse(entryResponse).Should().Be(fatWebResponse);
+		webFakeApi.CreateEntryRequest(entryRequest).Should().Be(fatWebResponse);
 	}
 
 	[Fact]
 	public async Task SendCreateResponseToApi()
 	{
-		await webFakeApi.CreateResponse(entryResponse);
+		await webFakeApi.CreateEntryRequest(entryRequest);
 
-		A.CallTo(() => webCaller.Post($"{fakeId}/response", entryResponse)).MustHaveHappened();
+		A.CallTo(() => webCaller.Post($"{fakeId}/response", entryRequest)).MustHaveHappened();
+	}
+
+	protected override Task<FatWebResponse> DoTestAction()
+	{
+		return webFakeApi.CreateEntryRequest(entryRequest);
 	}
 }

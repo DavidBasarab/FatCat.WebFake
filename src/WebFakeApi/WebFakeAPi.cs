@@ -11,7 +11,7 @@ public interface IWebFakeAPi
 
 	Uri FakeUri { get; }
 
-	Task<FatWebResponse> CreateResponse(EntryResponse entryResponse);
+	Task<FatWebResponse> CreateEntryRequest(EntryRequest request);
 
 	Task<FatWebResponse> DeleteResponse(string pathToDelete);
 
@@ -36,9 +36,9 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 		get => webCaller ??= WebCallerFactory.GetWebCaller(FakeUri);
 	}
 
-	public Task<FatWebResponse> CreateResponse(EntryResponse entryResponse)
+	public Task<FatWebResponse> CreateEntryRequest(EntryRequest request)
 	{
-		return WebCaller.Post($"{FakeId}/response", entryResponse);
+		return WebCaller.Post($"{FakeId}/response", request);
 	}
 
 	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
