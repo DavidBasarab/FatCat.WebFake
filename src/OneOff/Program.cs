@@ -5,6 +5,7 @@ using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi;
 using FatCat.WebFakeApi.Models;
+using Newtonsoft.Json;
 
 public static class Program
 {
@@ -16,9 +17,13 @@ public static class Program
 	{
 		api = new WebFakeAPi(fakeUri, "david");
 
-		var apiDeleteResponse = await api.DeleteResponse($"{HttpVerb.Delete}-{TestPath}");
+		var apiDeleteResponse = await api.DeleteResponse($"{HttpVerb.Delete}-/{TestPath}");
 
 		PrintResponse(apiDeleteResponse);
+
+		var allResponses = await api.GetAllResponses();
+
+		ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(allResponses.Data, Formatting.Indented)}");
 
 		var entryRequest = new EntryRequest
 		{
