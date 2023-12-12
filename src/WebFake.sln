@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.WebFake", "Tests.WebF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFakeApi", "WebFakeApi\WebFakeApi.csproj", "{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneOff", "OneOff\OneOff.csproj", "{8D2C37B2-103F-427C-BF70-19ED4EA14969}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4938BC2D-2216-4FD8-BCDD-0998BAE1319C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2C37B2-103F-427C-BF70-19ED4EA14969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2C37B2-103F-427C-BF70-19ED4EA14969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2C37B2-103F-427C-BF70-19ED4EA14969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2C37B2-103F-427C-BF70-19ED4EA14969}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
