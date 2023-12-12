@@ -38,9 +38,7 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 
 	public async Task<FatWebResponse> CreateResponse(EntryResponse entryResponse)
 	{
-		var _ = await WebCaller.Post($"{FakeId}/response", entryResponse);
-
-		return null;
+		return await WebCaller.Post($"{FakeId}/response", entryResponse);
 	}
 
 	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
