@@ -6,41 +6,72 @@ using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi;
 using FatCat.WebFakeApi.Models;
 
-var fakeUri = new Uri("http://localhost:14888");
-
-var api = new WebFakeAPi(fakeUri, "david");
-
-var path = "asus/rog-strix-rtx3080-10g-gaming";
-
-var entryRequest = new EntryRequest
+public static class Program
 {
-	Path = $"/{path}",
-	Verb = HttpVerb.Get,
-	Response = new EntryResponse { Body = "HELLO WORLD", HttpStatusCode = HttpStatusCode.OK }
-};
+	private const string TestPath = "asus/rog-strix-rtx3080-10g-gaming";
+	private static WebFakeAPi api;
+	private static readonly Uri fakeUri = new("http://localhost:14888");
 
-var createResponse = await api.CreateEntryRequest(entryRequest);
+	public static async Task Main(params string[] args)
+	{
+		api = new WebFakeAPi(fakeUri, "david");
 
-if (createResponse.IsUnsuccessful)
-{
-	ConsoleLog.WriteRed(
-		$"Could not create entry.  Status code: {createResponse.StatusCode} | Content <{createResponse.Content}>"
-	);
-}
+		var apiDeleteResponse = await api.DeleteResponse($"{HttpVerb.Delete}-{TestPath}");
 
-var webCallerFactory = new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
+		PrintResponse(apiDeleteResponse);
 
-var webCaller = webCallerFactory.GetWebCaller(fakeUri);
+		var entryRequest = new EntryRequest
+		{
+			Path = $"/{TestPath}",
+			Verb = HttpVerb.Get,
+			Response = new EntryResponse { Body = "HELLO WORLD", HttpStatusCode = HttpStatusCode.OK }
+		};
 
-var response = await webCaller.Get(path);
+		await CreateEntry(entryRequest);
 
-if (response.IsUnsuccessful)
-{
-	ConsoleLog.WriteRed($"Response failed.  Status code: {response.StatusCode} | Content <{response.Content}>");
-}
-else
-{
-	ConsoleLog.WriteGreen(
-		$"Response succeeded.  Status code: {response.StatusCode} | Content <{response.Content}>"
-	);
+		entryRequest.Verb = HttpVerb.Delete;
+		entryRequest.Response.Body = "GOODBYE WORLD";
+
+		await CreateEntry(entryRequest);
+
+		var webCallerFactory = new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
+
+		var webCaller = webCallerFactory.GetWebCaller(fakeUri);
+
+		var response = await webCaller.Get(TestPath);
+
+		PrintResponse(response);
+
+		var deleteResponse = await webCaller.Delete(TestPath);
+
+		PrintResponse(deleteResponse);
+	}
+
+	private static async Task CreateEntry(EntryRequest entryRequest)
+	{
+		var createResponse = await api.CreateEntryRequest(entryRequest);
+
+		if (createResponse.IsUnsuccessful)
+		{
+			ConsoleLog.WriteRed(
+				$"Could not create entry.  Status code: {createResponse.StatusCode} | Content <{createResponse.Content}>"
+			);
+		}
+	}
+
+	private static void PrintResponse(FatWebResponse response)
+	{
+		if (response.IsUnsuccessful)
+		{
+			ConsoleLog.WriteRed(
+				$"Response failed.  Status code: {response.StatusCode} | Content <{response.Content}>"
+			);
+		}
+		else
+		{
+			ConsoleLog.WriteGreen(
+				$"Response succeeded.  Status code: {response.StatusCode} | Content <{response.Content}>"
+			);
+		}
+	}
 }
