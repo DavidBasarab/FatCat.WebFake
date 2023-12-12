@@ -36,14 +36,14 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 		get => webCaller ??= WebCallerFactory.GetWebCaller(FakeUri);
 	}
 
-	public async Task<FatWebResponse> CreateResponse(EntryResponse entryResponse)
+	public Task<FatWebResponse> CreateResponse(EntryResponse entryResponse)
 	{
-		return await WebCaller.Post($"{FakeId}/response", entryResponse);
+		return WebCaller.Post($"{FakeId}/response", entryResponse);
 	}
 
 	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
 	{
-		throw new NotImplementedException();
+		return WebCaller.Delete($"{FakeId}/response/{pathToDelete}");
 	}
 
 	public Task<FatWebResponse<ClientRequest>> GetAllClientRequests()
