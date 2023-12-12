@@ -37,7 +37,9 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	{
 		await endpoint.DoAction();
 
-		A.CallTo(() => cache.Remove(pathToDelete)).MustHaveHappened();
+		var expectedPath = pathToDelete.Remove(0, 1);
+
+		A.CallTo(() => cache.Remove(expectedPath)).MustHaveHappened();
 	}
 
 	[Fact]

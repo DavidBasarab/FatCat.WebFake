@@ -1,5 +1,6 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;
@@ -36,7 +37,9 @@ public class DeleteEndpoint(
 	{
 		var fullPath = GetPath();
 
-		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty);
+		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty).Remove(0, 1);
+
+		ConsoleLog.WriteCyan($"Going to remove path <{pathToRemove}>");
 
 		responseCache.Remove(pathToRemove.ToLower());
 
