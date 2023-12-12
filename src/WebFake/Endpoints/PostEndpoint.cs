@@ -1,5 +1,6 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;

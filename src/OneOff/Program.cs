@@ -10,20 +10,29 @@ var fakeUri = new Uri("http://localhost:14888");
 
 var api = new WebFakeAPi(fakeUri, "david");
 
+var path = "asus/rog-strix-rtx3080-10g-gaming";
+
 var entryRequest = new EntryRequest
 {
-	Path = "asus/rog-strix-rtx3080-10g-gaming",
+	Path = $"/{path}",
 	Verb = HttpVerb.Get,
 	Response = new EntryResponse { Body = "HELLO WORLD", HttpStatusCode = HttpStatusCode.OK }
 };
 
-await api.CreateEntryRequest(entryRequest);
+var createResponse = await api.CreateEntryRequest(entryRequest);
+
+if (createResponse.IsUnsuccessful)
+{
+	ConsoleLog.WriteRed(
+		$"Could not create entry.  Status code: {createResponse.StatusCode} | Content <{createResponse.Content}>"
+	);
+}
 
 var webCallerFactory = new WebCallerFactory(new ToolkitLogger(), new JsonOperations());
 
 var webCaller = webCallerFactory.GetWebCaller(fakeUri);
 
-var response = await webCaller.Get(entryRequest.Path);
+var response = await webCaller.Get(path);
 
 if (response.IsUnsuccessful)
 {
