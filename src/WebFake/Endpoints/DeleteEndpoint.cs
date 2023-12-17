@@ -1,6 +1,5 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;
@@ -39,12 +38,8 @@ public class DeleteEndpoint(
 
 		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty).Remove(0, 1);
 
-		ConsoleLog.WriteCyan($"Going to remove path <{pathToRemove}>");
-
 		if (!responseCache.InCache(pathToRemove.ToLower()))
 		{
-			ConsoleLog.WriteRed($"The path <{pathToRemove.ToLower()}> not in the cache");
-
 			return BadRequest("path-not-found");
 		}
 
