@@ -43,6 +43,8 @@ public class DeleteEndpoint(
 
 		if (!responseCache.InCache(pathToRemove.ToLower()))
 		{
+			ConsoleLog.WriteRed($"The path <{pathToRemove.ToLower()}> not in the cache");
+
 			return BadRequest("path-not-found");
 		}
 
