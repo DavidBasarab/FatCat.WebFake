@@ -37,11 +37,6 @@ public class DeleteEndpoint(
 	{
 		var fullPath = GetPath();
 
-		foreach (var cacheItem in responseCache.GetAll())
-		{
-			ConsoleLog.WriteMagenta($"Cache item  | Path <{cacheItem.CacheId}>");
-		}
-
 		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty).Remove(0, 1);
 
 		ConsoleLog.WriteCyan($"Going to remove path <{pathToRemove}>");

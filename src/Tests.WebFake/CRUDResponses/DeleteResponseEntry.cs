@@ -10,6 +10,7 @@ namespace Tests.FatCat.WebFake.CRUDResponses;
 public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 {
 	private readonly string pathToDelete = $"/some/path/{Faker.RandomString()}";
+	private bool inCache = true;
 
 	public DeleteResponseEntry()
 	{
@@ -17,7 +18,17 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 
 		endpoint = new DeleteEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 
+		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
+
 		SetRequestOnEndpoint(fullEndingPath);
+	}
+
+	[Fact]
+	public void BeABadRequestIfNotInCache()
+	{
+		inCache = false;
+
+		endpoint.DoAction().Should().BeBadRequest("path-not-found");
 	}
 
 	[Fact]
