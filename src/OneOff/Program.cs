@@ -5,6 +5,7 @@ using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi;
 using FatCat.WebFakeApi.Models;
+using Humanizer;
 using Newtonsoft.Json;
 
 public static class Program
@@ -17,6 +18,47 @@ public static class Program
 	{
 		api = new WebFakeAPi(fakeUri, "david");
 
+		// await FirstTest();
+
+		for (var i = 0; i < 10; i++)
+		{
+			var entryRequest = new EntryRequest
+								{
+									Path = $"/{TestPath}",
+									Verb = HttpVerb.Get,
+									Response = new EntryResponse
+												{
+													Body = "HELLO WORLD",
+													HttpStatusCode = HttpStatusCode.OK
+												}
+								};
+
+			await CreateEntry(entryRequest);
+
+			ConsoleLog.WriteCyan("Going to now delete the response");
+
+			var apiDeleteResponse = await api.DeleteResponse($"{HttpVerb.Get}-/{TestPath}");
+
+			PrintResponse(apiDeleteResponse);
+
+			await Task.Delay(1.Seconds());
+		}
+	}
+
+	private static async Task CreateEntry(EntryRequest entryRequest)
+	{
+		var createResponse = await api.CreateEntryRequest(entryRequest);
+
+		if (createResponse.IsUnsuccessful)
+		{
+			ConsoleLog.WriteRed(
+								$"Could not create entry.  Status code: {createResponse.StatusCode} | Content <{createResponse.Content}>"
+								);
+		}
+	}
+
+	private static async Task FirstTest()
+	{
 		var apiDeleteResponse = await api.DeleteResponse($"{HttpVerb.Delete}-/{TestPath}");
 
 		PrintResponse(apiDeleteResponse);
@@ -26,11 +68,15 @@ public static class Program
 		ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(allResponses.Data, Formatting.Indented)}");
 
 		var entryRequest = new EntryRequest
-		{
-			Path = $"/{TestPath}",
-			Verb = HttpVerb.Get,
-			Response = new EntryResponse { Body = "HELLO WORLD", HttpStatusCode = HttpStatusCode.OK }
-		};
+							{
+								Path = $"/{TestPath}",
+								Verb = HttpVerb.Get,
+								Response = new EntryResponse
+											{
+												Body = "HELLO WORLD",
+												HttpStatusCode = HttpStatusCode.OK
+											}
+							};
 
 		await CreateEntry(entryRequest);
 
@@ -52,31 +98,19 @@ public static class Program
 		PrintResponse(deleteResponse);
 	}
 
-	private static async Task CreateEntry(EntryRequest entryRequest)
-	{
-		var createResponse = await api.CreateEntryRequest(entryRequest);
-
-		if (createResponse.IsUnsuccessful)
-		{
-			ConsoleLog.WriteRed(
-				$"Could not create entry.  Status code: {createResponse.StatusCode} | Content <{createResponse.Content}>"
-			);
-		}
-	}
-
 	private static void PrintResponse(FatWebResponse response)
 	{
 		if (response.IsUnsuccessful)
 		{
 			ConsoleLog.WriteRed(
-				$"Response failed.  Status code: {response.StatusCode} | Content <{response.Content}>"
-			);
+								$"Response failed.  Status code: {response.StatusCode} | Content <{response.Content}>"
+								);
 		}
 		else
 		{
 			ConsoleLog.WriteGreen(
-				$"Response succeeded.  Status code: {response.StatusCode} | Content <{response.Content}>"
-			);
+								$"Response succeeded.  Status code: {response.StatusCode} | Content <{response.Content}>"
+								);
 		}
 	}
 }
