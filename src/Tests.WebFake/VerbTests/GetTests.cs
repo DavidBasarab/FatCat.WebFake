@@ -1,5 +1,5 @@
 ﻿using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 
 namespace Tests.FatCat.WebFake.VerbTests;
 

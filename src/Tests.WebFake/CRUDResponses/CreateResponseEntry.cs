@@ -2,8 +2,9 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.WebServer.Testing;
+using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 using Newtonsoft.Json;
 using Xunit;
 

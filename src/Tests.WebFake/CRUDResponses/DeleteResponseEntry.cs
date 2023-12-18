@@ -2,7 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.CRUDResponses;
@@ -10,6 +10,7 @@ namespace Tests.FatCat.WebFake.CRUDResponses;
 public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 {
 	private readonly string pathToDelete = $"/some/path/{Faker.RandomString()}";
+	private bool inCache = true;
 
 	public DeleteResponseEntry()
 	{
@@ -17,7 +18,17 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 
 		endpoint = new DeleteEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
 
+		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
+
 		SetRequestOnEndpoint(fullEndingPath);
+	}
+
+	[Fact]
+	public void BeABadRequestIfNotInCache()
+	{
+		inCache = false;
+
+		endpoint.DoAction().Should().BeBadRequest("path-not-found");
 	}
 
 	[Fact]
@@ -37,7 +48,9 @@ public class DeleteResponseEntry : WebFakeEndpointTests<DeleteEndpoint>
 	{
 		await endpoint.DoAction();
 
-		A.CallTo(() => cache.Remove(pathToDelete)).MustHaveHappened();
+		var expectedPath = pathToDelete.Remove(0, 1);
+
+		A.CallTo(() => cache.Remove(expectedPath)).MustHaveHappened();
 	}
 
 	[Fact]

@@ -3,7 +3,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.CRUDResponses;

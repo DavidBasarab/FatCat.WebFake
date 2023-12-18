@@ -1,13 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <RootNamespace>FatCat.WebFake</RootNamespace>
-        <AssemblyName>FatCat.WebFake</AssemblyName>
+        <RootNamespace>FatCat.WebFakeApi</RootNamespace>
+        <AssemblyName>FatCat.WebFakeApi</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>12</LangVersion>
-        <VersionPrefix>0.1.001</VersionPrefix>
+    <VersionPrefix>0.1.2</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.WebFake</PackageProjectUrl>
@@ -15,8 +14,8 @@
         <RepositoryUrl>https://github.com/DavidBasarab/FatCat.WebFake</RepositoryUrl>
         <NoWarn>CS8002,CS1700</NoWarn>
         <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>WebFakeApiKey.snk</AssemblyOriginatorKeyFile>
         <TargetFramework>net8.0</TargetFramework>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -47,16 +46,5 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FatCat.Toolkit" Version="1.0.190" />
-        <PackageReference Include="FatCat.Toolkit.WebServer" Version="1.0.19" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\WebFakeApi\WebFakeApi.csproj" />
     </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 
 namespace FatCat.WebFake.Endpoints;
 

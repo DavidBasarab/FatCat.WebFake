@@ -3,7 +3,7 @@ using FatCat.Toolkit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FatCat.WebFake.Models;
+namespace FatCat.WebFakeApi.Models;
 
 public class EntryResponse : EqualObject
 {

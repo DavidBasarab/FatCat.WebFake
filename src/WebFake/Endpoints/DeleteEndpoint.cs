@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
-using FatCat.WebFake.Models;
+using FatCat.WebFakeApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
@@ -36,7 +36,12 @@ public class DeleteEndpoint(
 	{
 		var fullPath = GetPath();
 
-		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty);
+		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty).Remove(0, 1);
+
+		if (!responseCache.InCache(pathToRemove.ToLower()))
+		{
+			return BadRequest("path-not-found");
+		}
 
 		responseCache.Remove(pathToRemove.ToLower());
 
