@@ -1,8 +1,10 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
@@ -29,6 +31,8 @@ public class GetEndpoint(
 	[HttpGet("{*url}")]
 	public override async Task<WebResult> DoAction()
 	{
+		ConsoleLog.Write($"Get Endpoint | DisplayUrl <{Request.GetDisplayUrl()}>");
+
 		if (IsResponseEntry())
 		{
 			var allItems = responseCache.GetAll();
