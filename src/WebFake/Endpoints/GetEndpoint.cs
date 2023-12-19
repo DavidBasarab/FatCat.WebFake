@@ -31,7 +31,7 @@ public class GetEndpoint(
 	[HttpGet("{*url}")]
 	public override async Task<WebResult> DoAction()
 	{
-		ConsoleLog.Write($"Get Endpoint | DisplayUrl <{Request.GetDisplayUrl()}>");
+		ConsoleLog.Write($"Get Endpoint | DisplayUrl <{Request.GetDisplayUrl()}> | ResponsePath <{ResponsePath}>");
 
 		if (IsResponseEntry())
 		{
