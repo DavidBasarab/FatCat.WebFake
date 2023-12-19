@@ -32,7 +32,7 @@ public class GetEndpoint(
 	public override async Task<WebResult> DoAction()
 	{
 		ConsoleLog.Write($"Get Endpoint | DisplayUrl <{Request.GetDisplayUrl()}> | ResponsePath <{ResponsePath}>");
-`
+
 		if (IsResponseEntry())
 		{
 			var allItems = responseCache.GetAll();
