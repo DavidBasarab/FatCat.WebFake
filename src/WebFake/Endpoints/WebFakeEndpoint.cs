@@ -24,7 +24,7 @@ public abstract class WebFakeEndpoint(
 
 	protected string ResponsePath
 	{
-		get => $"/{settings.FakeId}/response";
+		get => $"/{settings.FakeId}/response".ToLower();
 	}
 
 	protected abstract HttpVerb SupportedVerb { get; }

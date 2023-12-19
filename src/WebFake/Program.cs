@@ -20,8 +20,7 @@ public static class Program
 			Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
 			ContainerAssemblies = [Assembly.GetExecutingAssembly(), typeof(ToolkitWebApplication).Assembly],
 			OnWebApplicationStarted = Started,
-			Args = args,
-			BasePath = "/david"
+			Args = args
 		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
@@ -74,8 +73,6 @@ public static class Program
 	{
 		try
 		{
-			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
-
 			var settings = SystemScope.Container.Resolve<IWebFakeSettings>();
 
 			ConsoleLog.WriteGreen(
