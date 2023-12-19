@@ -47,7 +47,11 @@ public class PostEndpoint(
 			return BadRequest(ResponseCodes.EntryAlreadyExists);
 		}
 
-		responseCache.Add(new ResponseCacheItem { Entry = entryRequest });
+		var cacheItem = new ResponseCacheItem { Entry = entryRequest };
+
+		responseCache.Add(cacheItem);
+
+		ConsoleLog.Write($"Added Entry <{cacheItem.CacheId}>");
 
 		return Ok(ResponseCodes.EntryAdded);
 	}
