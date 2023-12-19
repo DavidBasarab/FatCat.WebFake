@@ -25,7 +25,7 @@ public class GetEndpoint(
 
 	private string ClientRequestPath
 	{
-		get => $"/{settings.FakeId}/request";
+		get => $"/{settings.FakeId}/request".ToLower();
 	}
 
 	[HttpGet("{*url}")]
