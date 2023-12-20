@@ -54,11 +54,22 @@ public abstract class WebFakeEndpoint(
 
 	protected async Task<WebResult> ProcessRequest()
 	{
+		Console.Write($"Going to Process post for <{Request.GetDisplayUrl()}>");
+
 		await SaveClientRequest();
 
 		var path = GetPath();
 
-		var cacheId = $"{SupportedVerb}-{path}";
+		Console.Write($"Path is <{path}> | <{Request.GetDisplayUrl()}>");
+
+		foreach (var item in responseCache.GetAll())
+		{
+			Console.Write($"      --> <{item.CacheId}>");
+		}
+
+		var cacheId = $"{SupportedVerb}-{path}".ToLower();
+
+		Console.Write($"          ===> <{cacheId}>");
 
 		var cacheItem = responseCache.Get(cacheId);
 
