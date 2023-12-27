@@ -13,7 +13,9 @@ public interface IWebFakeAPi
 
 	Task<FatWebResponse> CreateEntryRequest(EntryRequest request);
 
-	Task<FatWebResponse> DeleteResponse(string pathToDelete);
+	Task<FatWebResponse> DeleteResponse(string pathToDeleteWithVerb);
+
+	Task<FatWebResponse> DeleteResponse(HttpVerb verb, string pathToDelete);
 
 	Task<FatWebResponse<List<ClientRequest>>> GetAllClientRequests();
 
@@ -41,9 +43,14 @@ public class WebFakeAPi(Uri fakeUri, string fakeId) : IWebFakeAPi
 		return WebCaller.Post($"{FakeId}/response", request);
 	}
 
-	public Task<FatWebResponse> DeleteResponse(string pathToDelete)
+	public Task<FatWebResponse> DeleteResponse(string pathToDeleteWithVerb)
 	{
-		return WebCaller.Delete($"{FakeId}/response/{pathToDelete}");
+		return WebCaller.Delete($"{FakeId}/response/{pathToDeleteWithVerb}");
+	}
+
+	public Task<FatWebResponse> DeleteResponse(HttpVerb verb, string pathToDelete)
+	{
+		return DeleteResponse($"{verb}-{pathToDelete}".ToLower());
 	}
 
 	public async Task<FatWebResponse<List<ClientRequest>>> GetAllClientRequests()

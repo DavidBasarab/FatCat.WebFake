@@ -4,6 +4,7 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FatCat.WebFake.Endpoints;
@@ -35,11 +36,15 @@ public class DeleteEndpoint(
 
 	private WebResult RemoveResponseEntry()
 	{
+		ConsoleLog.Write($"Going to delete response entry | <{Request.GetDisplayUrl()}>");
+
 		var fullPath = GetPath();
 
 		var pathToRemove = fullPath.Replace($"{ResponsePath}", string.Empty).Remove(0, 1);
 
 		var cacheId = pathToRemove.ToLower();
+
+		ConsoleLog.Write($"CacheId <{cacheId}>");
 
 		if (!responseCache.InCache(cacheId))
 		{
