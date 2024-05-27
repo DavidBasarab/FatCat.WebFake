@@ -20,7 +20,7 @@ public abstract class WebFakeEndpoint(
 {
 	protected readonly IFatCatCache<ClientRequestCacheItem> clientRequestCache = clientRequestCache;
 	protected readonly IFatCatCache<ResponseCacheItem> responseCache = responseCache;
-	protected IWebFakeSettings settings = settings;
+	protected readonly IWebFakeSettings settings = settings;
 
 	protected string ResponsePath
 	{
@@ -49,7 +49,7 @@ public abstract class WebFakeEndpoint(
 	{
 		var path = GetPath();
 
-		return path.StartsWith(ResponsePath);
+		return path.StartsWith(ResponsePath, StringComparison.InvariantCultureIgnoreCase);
 	}
 
 	protected async Task<WebResult> ProcessRequest()
@@ -59,17 +59,7 @@ public abstract class WebFakeEndpoint(
 		await SaveClientRequest();
 
 		var path = GetPath();
-
-		Console.Write($"Path is <{path}> | <{Request.GetDisplayUrl()}>");
-
-		foreach (var item in responseCache.GetAll())
-		{
-			Console.Write($"      --> <{item.CacheId}>");
-		}
-
 		var cacheId = $"{SupportedVerb}-{path}".ToLower();
-
-		Console.Write($"          ===> <{cacheId}>");
 
 		var cacheItem = responseCache.Get(cacheId);
 

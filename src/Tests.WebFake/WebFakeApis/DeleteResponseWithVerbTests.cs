@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Testing;
 using FatCat.Toolkit.Web;

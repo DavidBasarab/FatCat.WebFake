@@ -123,7 +123,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	{
 		await ExecuteEndpointAction();
 
-		var cacheId = $"{Verb}-{Path.ToLower()}";
+		var cacheId = $"{Verb}-{Path.ToLower()}".ToLower();
 
 		A.CallTo(() => cache.Get(cacheId)).MustHaveHappened();
 	}

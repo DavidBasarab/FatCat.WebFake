@@ -54,6 +54,6 @@ public class GetEndpoint(
 	{
 		var path = GetPath();
 
-		return path.StartsWith(ClientRequestPath);
+		return path.StartsWith(ClientRequestPath, StringComparison.InvariantCultureIgnoreCase);
 	}
 }
