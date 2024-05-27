@@ -6,7 +6,7 @@
         <AssemblyName>FatCat.WebFakeApi</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>12</LangVersion>
-    <VersionPrefix>0.1.3</VersionPrefix>
+    <VersionPrefix>0.1.4</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.WebFake</PackageProjectUrl>
