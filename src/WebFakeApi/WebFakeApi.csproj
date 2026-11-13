@@ -15,7 +15,7 @@
         <NoWarn>CS8002,CS1700</NoWarn>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>WebFakeApiKey.snk</AssemblyOriginatorKeyFile>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup>
