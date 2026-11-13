@@ -2,7 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi.Models;
-using FluentAssertions;
+using FatCat.Testing;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.WebFakeApis;

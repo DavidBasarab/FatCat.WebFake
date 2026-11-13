@@ -6,7 +6,7 @@ using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFakeApi.Models;
-using FluentAssertions;
+using FatCat.Testing;
 using Humanizer;
 using Xunit;
 
@@ -88,7 +88,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 	{
 		await ExecuteEndpointAction();
 
-		endpoint.Response.Headers.Should().BeEmpty();
+		endpoint.Response.Headers.AsEnumerable().Should().BeEmpty();
 	}
 
 	[Fact]

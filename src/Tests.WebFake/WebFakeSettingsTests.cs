@@ -1,7 +1,7 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.WebFake;
-using FluentAssertions;
+using FatCat.Testing;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
