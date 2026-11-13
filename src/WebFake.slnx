@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="OneOff/OneOff.csproj" />
+  <Project Path="Tests.WebFake/Tests.WebFake.csproj" />
+  <Project Path="WebFake/WebFake.csproj" />
+  <Project Path="WebFakeApi/WebFakeApi.csproj" />
+</Solution>
