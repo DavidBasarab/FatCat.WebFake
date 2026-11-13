@@ -2,10 +2,10 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using FatCat.Toolkit.WebServer;
-using Newtonsoft.Json;
 
 namespace FatCat.WebFake;
 
@@ -20,12 +20,12 @@ public static class Program
 			Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
 			ContainerAssemblies = [Assembly.GetExecutingAssembly(), typeof(ToolkitWebApplication).Assembly],
 			OnWebApplicationStarted = Started,
-			Args = args
+			Args = args,
 		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
 		{
-			ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+			ConsoleLog.WriteMagenta($"Got data buffer message: {new JsonOperations().Serialize(message)}");
 
 			ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
@@ -75,13 +75,9 @@ public static class Program
 		{
 			var settings = SystemScope.Container.Resolve<IWebFakeSettings>();
 
-			ConsoleLog.WriteGreen(
-				$"The settings are: {JsonConvert.SerializeObject(settings, Formatting.Indented)}"
-			);
+			ConsoleLog.WriteGreen($"The settings are: {new JsonOperations().Serialize(settings, true)}");
 
-			ConsoleLog.WriteMagenta(
-				$"{JsonConvert.SerializeObject(applicationSettings.Args, Formatting.Indented)}"
-			);
+			ConsoleLog.WriteMagenta($"{new JsonOperations().Serialize(applicationSettings.Args, true)}");
 
 			// var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
 			//

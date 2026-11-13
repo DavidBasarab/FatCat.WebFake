@@ -87,7 +87,7 @@ public abstract class WebFakeEndpoint(
 
 		var webResult = new WebResult(response.HttpStatusCode, response.Body)
 		{
-			ContentType = response.ContentType
+			ContentType = response.ContentType,
 		};
 
 		return webResult;
@@ -116,7 +116,7 @@ public abstract class WebFakeEndpoint(
 			Verb = SupportedVerb,
 			RequestBody = await GetRequestBody(),
 			RequestId = generator.NewId(),
-			RequestTime = dateTimeUtilities.UtcNow()
+			RequestTime = dateTimeUtilities.UtcNow(),
 		};
 
 		clientRequestCache.Add(new ClientRequestCacheItem(clientRequest));

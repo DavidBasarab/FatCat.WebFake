@@ -5,7 +5,6 @@ using FatCat.Toolkit.WebServer.Testing;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
 using FatCat.WebFakeApi.Models;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.CRUDResponses;
@@ -24,7 +23,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	{
 		A.CallTo(() => cache.InCache(A<string>._)).ReturnsLazily(() => inCache);
 
-		endpoint = new PostEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities);
+		endpoint = new PostEndpoint(cache, settings, thread, clientRequestCache, generator, dateTimeUtilities, jsonOperations);
 
 		SetRequestOnEndpoint(string.Empty, "/stuff");
 	}
@@ -90,7 +89,7 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 	[Fact]
 	public async Task IfEndpointPathDoesNotStartWithFakeIdDoNotAddToCache()
 	{
-		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), "/response");
+		SetRequestOnEndpoint(jsonOperations.Serialize(entryRequest), "/response");
 
 		await endpoint.DoAction();
 
@@ -137,6 +136,6 @@ public class CreateResponseEntry : WebFakeEndpointTests<PostEndpoint>
 
 	private void SetUpEntryRequest()
 	{
-		SetRequestOnEndpoint(JsonConvert.SerializeObject(entryRequest), ResponsePath);
+		SetRequestOnEndpoint(jsonOperations.Serialize(entryRequest), ResponsePath);
 	}
 }

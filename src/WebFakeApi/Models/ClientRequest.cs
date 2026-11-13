@@ -1,6 +1,5 @@
-﻿using FatCat.Toolkit;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+using FatCat.Toolkit;
 
 namespace FatCat.WebFakeApi.Models;
 
@@ -16,6 +15,6 @@ public class ClientRequest : EqualObject
 
 	public DateTime RequestTime { get; set; }
 
-	[JsonConverter(typeof(StringEnumConverter))]
+	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public HttpVerb Verb { get; set; }
 }

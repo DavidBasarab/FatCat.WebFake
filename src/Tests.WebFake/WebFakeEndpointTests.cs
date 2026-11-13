@@ -4,6 +4,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Extensions;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Threading;
 using FatCat.WebFake;
 using FatCat.WebFake.Endpoints;
@@ -25,6 +26,7 @@ public class WebFakeEndpointTests<TEndpoint>
 
 	protected readonly string fakeId = Faker.RandomString();
 	protected readonly IGenerator generator = A.Fake<IGenerator>();
+	protected readonly IJsonOperations jsonOperations = new JsonOperations();
 	protected readonly IWebFakeSettings settings = A.Fake<IWebFakeSettings>();
 	protected readonly IThread thread = A.Fake<IThread>();
 

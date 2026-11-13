@@ -8,7 +8,6 @@ using FatCat.WebFake.Endpoints;
 using FatCat.WebFakeApi.Models;
 using FluentAssertions;
 using Humanizer;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Tests.FatCat.WebFake.VerbTests;
@@ -236,7 +235,7 @@ public abstract class VerbTests<TEndpoint> : WebFakeEndpointTests<TEndpoint>
 		response.Headers.Clear();
 
 		response.ContentType = "application/json; charset=UTF-8";
-		response.Body = JsonConvert.SerializeObject(model);
+		response.Body = jsonOperations.Serialize(model);
 		response.HttpStatusCode = HttpStatusCode.OK;
 	}
 

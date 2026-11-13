@@ -6,7 +6,6 @@ using FatCat.Toolkit.Web;
 using FatCat.WebFakeApi;
 using FatCat.WebFakeApi.Models;
 using Humanizer;
-using Newtonsoft.Json;
 
 public static class Program
 {
@@ -65,7 +64,7 @@ public static class Program
 
 		var allResponses = await api.GetAllResponses();
 
-		ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(allResponses.Data, Formatting.Indented)}");
+		ConsoleLog.WriteMagenta($"{new JsonOperations().Serialize(allResponses.Data, true)}");
 
 		var entryRequest = new EntryRequest
 							{

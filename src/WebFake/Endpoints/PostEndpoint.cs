@@ -1,11 +1,11 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using FatCat.WebFakeApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace FatCat.WebFake.Endpoints;
 
@@ -15,7 +15,8 @@ public class PostEndpoint(
 	IThread thread,
 	IFatCatCache<ClientRequestCacheItem> requestCache,
 	IGenerator generator,
-	IDateTimeUtilities dateTimeUtilities
+	IDateTimeUtilities dateTimeUtilities,
+	IJsonOperations jsonOperations
 ) : WebFakeEndpoint(responseCache, settings, thread, requestCache, generator, dateTimeUtilities)
 {
 	protected override HttpVerb SupportedVerb
@@ -33,7 +34,7 @@ public class PostEndpoint(
 	{
 		var body = await GetRequestBody();
 
-		var entryRequest = JsonConvert.DeserializeObject<EntryRequest>(body);
+		var entryRequest = jsonOperations.Deserialize<EntryRequest>(body);
 
 		entryRequest.Path = entryRequest.Path.ToLower();
 
